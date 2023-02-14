@@ -1,3 +1,2 @@
 #!/bin/bash
-
-grep -x iacta iacta
+tail -n 3 iacta | tail -n 1
