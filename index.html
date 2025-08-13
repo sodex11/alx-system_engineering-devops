@@ -1,0 +1,415 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>JS3 Basic Science — 70-Question Objective Test</title>
+<style>
+  :root{
+    --bg:#f6f7fb;--card:#fff;--ink:#111;--muted:#555;
+    --ok:#155e75;--okbg:#e0f2fe; /* blue-ish */
+    --bad:#7f1d1d;--badbg:#fee2e2; /* red-ish */
+    --accent:#0a7;--primary:#056;--border:#e5e7eb
+  }
+  *{box-sizing:border-box}
+  body{font-family:Inter,Segoe UI,Arial,sans-serif;background:var(--bg);color:var(--ink);margin:0}
+  header{background:linear-gradient(90deg,#056,#0a7);color:#fff;padding:18px 10px;text-align:center}
+  header h1{margin:.1rem 0 .2rem;font-size:1.35rem}
+  header .sub{opacity:.95;font-size:.95rem}
+  main{max-width:980px;margin:14px auto;padding:10px}
+  .meta{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:10px 0 14px}
+  label.name{font-weight:600}
+  input[type="text"]{padding:.6rem;border-radius:8px;border:1px solid var(--border);width:320px;max-width:100%}
+  #timer{margin-left:auto;font-weight:700;background:#fff;padding:.35rem .6rem;border-radius:8px;border:1px solid var(--border)}
+  .nav-row{display:flex;gap:8px;align-items:center;justify-content:space-between;margin:.25rem 0 1rem}
+  .nav-row .pager{display:flex;gap:8px}
+  .btn{border:0;border-radius:10px;padding:.55rem .9rem;cursor:pointer}
+  .btn.ghost{background:#fff;border:1px solid var(--border)}
+  .btn.primary{background:var(--primary);color:#fff}
+  .btn.accent{background:var(--accent);color:#fff}
+  .questions{display:grid;gap:.85rem}
+  .q{background:var(--card);padding:12px;border-radius:10px;border:1px solid var(--border);box-shadow:0 2px 6px rgba(10,10,20,.05)}
+  .q h4{margin:.2rem 0 .55rem;font-size:1rem;line-height:1.35}
+  .answers label{display:block;cursor:pointer;padding:.35rem .5rem;border-radius:8px;border:1px solid transparent}
+  .answers input{margin-right:.45rem}
+  .answers label:hover{background:#f8fafc}
+  .correct{background:var(--okbg)!important;border-color:#bae6fd}
+  .correct .tag{color:var(--ok);font-weight:700}
+  .wrong{background:var(--badbg)!important;border-color:#fecaca}
+  .wrong .tag{color:var(--bad);font-weight:700}
+  .submit-wrap{display:flex;gap:12px;align-items:center;margin-top:14px}
+  .submit-wrap .left{display:flex;gap:8px;align-items:center}
+  #result{margin-top:10px;font-weight:700}
+  .summary{background:#fff;border:1px dashed #cbd5e1;border-radius:10px;padding:10px;margin-top:10px}
+  .summary h5{margin:.2rem 0 .4rem}
+  footer{margin:2rem 0;text-align:center;color:var(--muted);font-size:.9rem}
+  .note{color:#064e3b;font-size:.9rem}
+  .warn{color:#7f1d1d;font-size:.9rem}
+  @media(max-width:700px){.nav-row{flex-direction:column;align-items:stretch}.nav-row .pager{justify-content:space-between}}
+</style>
+</head>
+<body>
+<header>
+  <h1>JS3 Basic Science — Objective Test (70 Questions)</h1>
+  <div class="sub">Eye • Tongue • Genetics • 60 minutes • Continuous numbering</div>
+</header>
+
+<main>
+  <form id="quizForm">
+    <div class="meta">
+      <label class="name">Student full name
+        <input id="studentName" name="studentName" type="text" placeholder="Enter full name" required />
+      </label>
+      <div id="timer" aria-live="polite">Time left: 60:00</div>
+    </div>
+
+    <!-- Navigation kept separate from Submit -->
+    <div class="nav-row" aria-label="navigation-not-submit">
+      <div class="pager">
+        <button type="button" class="btn ghost" id="toTop">↑ Top</button>
+        <button type="button" class="btn ghost" id="toBottom">↓ Bottom</button>
+      </div>
+      <div class="pager">
+        <button type="button" class="btn ghost" id="prevUnanswered">Previous Unanswered</button>
+        <button type="button" class="btn ghost" id="nextUnanswered">Next Unanswered</button>
+      </div>
+    </div>
+
+    <section class="questions" id="questionsContainer">
+      <!-- Questions injected by script -->
+    </section>
+
+    <!-- Submit is isolated from nav controls -->
+    <div class="submit-wrap">
+      <div class="left">
+        <button type="submit" class="btn primary" id="submitBtn">Submit answers</button>
+        <span id="result" aria-live="polite"></span>
+      </div>
+    </div>
+
+    <div id="breakdown" class="summary" hidden>
+      <h5>Detailed feedback</h5>
+      <div id="failedNumbers"></div>
+      <ol id="failedList"></ol>
+    </div>
+  </form>
+</main>
+
+<footer>
+  <div>Built for JS3 Basic Science — Eye, Tongue, Genetics • Auto-sends only failed questions to teacher email.</div>
+</footer>
+
+<script>
+/* =========================
+   QUIZ DATA (70 MCQs)
+   ========================= */
+
+const questions = [
+/* ---------- Section A: Sense Organs – The Eye (1–35) ---------- */
+{q:"Sense organs are composed of:", opts:["Skeletal muscles","Sensory neurons","Connective tissues","Red blood cells"], a:"Sensory neurons"},
+{q:"The main function of sense organs is to:", opts:["Store food","Perceive and respond to surroundings","Produce hormones","Pump blood"], a:"Perceive and respond to surroundings"},
+{q:"Which organ detects light stimuli?", opts:["Ear","Eye","Nose","Tongue"], a:"Eye"},
+{q:"The sensory nerve from the eye to the brain is the:", opts:["Auditory nerve","Optic nerve","Olfactory nerve","Spinal nerve"], a:"Optic nerve"},
+{q:"The three layers of the mammalian eye are sclera, choroid, and:", opts:["Iris","Retina","Cornea","Pupil"], a:"Retina"},
+{q:"The sclera gives the eye its:", opts:["Colour","Shape and protection","Accommodation","Lens position"], a:"Shape and protection"},
+{q:"The transparent front bulge of the sclera is the:", opts:["Lens","Cornea","Pupil","Conjunctiva"], a:"Cornea"},
+{q:"Which part covers the cornea for protection?", opts:["Choroid","Retina","Conjunctiva","Iris"], a:"Conjunctiva"},
+{q:"The black pigment in the choroid is:", opts:["Melanin","Keratin","Myosin","Collagen"], a:"Melanin"},
+{q:"Melanin in the eye helps to:", opts:["Absorb nutrients","Prevent internal reflection of light","Increase refraction","Make tears"], a:"Prevent internal reflection of light"},
+{q:"The iris controls:", opts:["The shape of the eyeball","The amount of light entering the eye","The speed of nerve impulses","The elasticity of the lens"], a:"The amount of light entering the eye"},
+{q:"The opening in the iris is called the:", opts:["Retina","Lens","Pupil","Sclera"], a:"Pupil"},
+{q:"Ciliary muscles are responsible for:", opts:["Producing tears","Changing lens focal length","Protecting the retina","Transmitting impulses"], a:"Changing lens focal length"},
+{q:"The suspensory ligaments attach to:", opts:["Pupil","Cornea","Lens and ciliary muscles","Retina and iris"], a:"Lens and ciliary muscles"},
+{q:"The transparent biconvex structure that bends light is the:", opts:["Cornea","Lens","Conjunctiva","Aqueous humour"], a:"Lens"},
+{q:"The retina is sensitive to:", opts:["Sound","Light","Heat","Pressure"], a:"Light"},
+{q:"Cones are sensitive to:", opts:["Low light only","Bright light and colours","Touch","Sound"], a:"Bright light and colours"},
+{q:"Rods are sensitive to:", opts:["Black and white vision","Red and green colours","Taste sensations","High temperature"], a:"Black and white vision"},
+{q:"The most sensitive part of the retina is the:", opts:["Blind spot","Yellow spot (fovea)","Cornea","Iris"], a:"Yellow spot (fovea)"},
+{q:"The blind spot has:", opts:["Rods only","Cones only","No light-sensitive cells","Both rods and cones"], a:"No light-sensitive cells"},
+{q:"The aqueous humour is located between:", opts:["Lens and retina","Cornea and lens","Iris and pupil","Lens and vitreous humour"], a:"Cornea and lens"},
+{q:"The main function of aqueous humour is to:", opts:["Absorb sound waves","Maintain eye shape and refract light","Provide colour","Support the eyelid"], a:"Maintain eye shape and refract light"},
+{q:"The vitreous humour is:", opts:["A thin membrane","Jelly-like fluid behind the lens","The coloured part of the eye","The transparent cornea"], a:"Jelly-like fluid behind the lens"},
+{q:"Accommodation is the ability of the eye to:", opts:["Change iris colour","Focus near and distant objects","Increase light entry","Expand and contract pupils"], a:"Focus near and distant objects"},
+{q:"Images on the retina are:", opts:["Upright and larger","Real, inverted, and smaller","Virtual and upright","3D and life-size"], a:"Real, inverted, and smaller"},
+{q:"The cooperation of two eyes for depth perception is called:", opts:["Monocular vision","Binocular vision","Parallel vision","Lateral vision"], a:"Binocular vision"},
+{q:"In myopia, the image forms:", opts:["Behind the retina","On the retina","In front of the retina","On the cornea"], a:"In front of the retina"},
+{q:"Myopia is corrected with:", opts:["Convex lens","Concave lens","Cylindrical lens","Bifocal lens"], a:"Concave lens"},
+{q:"Hypermetropia is caused by:", opts:["Short eyeball","Long eyeball","Weak optic nerve","Damaged cornea"], a:"Short eyeball"},
+{q:"Astigmatism is due to:", opts:["Uneven curvature of cornea or lens","Small pupil size","Excess aqueous humour","Weak retina"], a:"Uneven curvature of cornea or lens"},
+{q:"Presbyopia is related to:", opts:["Old age","Newborn babies","Overuse of eyes in reading","Colour blindness"], a:"Old age"},
+{q:"Colour blindness affects mainly:", opts:["Blue and yellow","Red and green distinction","Black and white","Purple and orange"], a:"Red and green distinction"},
+{q:"Cataract is a condition in which:", opts:["Lens becomes cloudy","Cornea becomes curved","Pupil enlarges","Retina loses cells"], a:"Lens becomes cloudy"},
+{q:"Cataract can be treated by:", opts:["Eye drops","Lens replacement surgery","Convex lens","Concave lens"], a:"Lens replacement surgery"},
+{q:"One rule for caring for the eyes is:", opts:["Read in dim light","Avoid rubbing the eyes with dirty hands","Play with sharp objects","Ignore regular cleaning"], a:"Avoid rubbing the eyes with dirty hands"},
+
+/* ---------- Section B: Sense Organs – The Tongue (36–45) ---------- */
+{q:"The tongue is mainly:", opts:["A skeletal bone","A muscular organ","A gland","A nerve"], a:"A muscular organ"},
+{q:"The small bumps on the tongue are called:", opts:["Papillae","Taste pores","Cilia","Folds"], a:"Papillae"},
+{q:"Papillae contain:", opts:["Salivary glands","Taste buds","Lens cells","Rod cells"], a:"Taste buds"},
+{q:"Taste buds detect:", opts:["Sweet, sour, bitter, salty","Hot, cold, rough, smooth","Black, white, red, green","Large, small, soft, hard"], a:"Sweet, sour, bitter, salty"},
+{q:"Sweet taste is detected mainly at:", opts:["Back of tongue","Tip of tongue","Middle of tongue","Sides of tongue"], a:"Tip of tongue"},
+{q:"Salt taste is detected mainly at:", opts:["Sides towards the front","Centre of tongue","Back of tongue","All over tongue only"], a:"Sides towards the front"},
+{q:"Bitter taste is detected mainly at:", opts:["Tip","Sides","Back towards throat","Middle"], a:"Back towards throat"},
+{q:"Sour taste is detected mainly:", opts:["Behind the salt taste buds","In the middle","At the tip","At the back"], a:"Behind the salt taste buds"},
+{q:"We can taste substances only when:", opts:["They are solid","They are in solution","They are hot","They are large"], a:"They are in solution"},
+{q:"Savoury taste is detected:", opts:["By the middle part of tongue","By the tip","By the back","By the sides"], a:"By the middle part of tongue"},
+
+/* ---------- Section C: Genetics (46–70) ---------- */
+{q:"Genetics is the study of:", opts:["Cells and tissues","Heredity and variation","Plants only","Fossils"], a:"Heredity and variation"},
+{q:"Heredity is:", opts:["Transmission of traits from parents to offspring","Change in body due to climate","Growth in plants","Eating patterns"], a:"Transmission of traits from parents to offspring"},
+{q:"Variation refers to:", opts:["Identical features in all organisms","Differences among individuals","Changes in climate","Body temperature control"], a:"Differences among individuals"},
+{q:"Chromosomes are found in:", opts:["Cytoplasm","Nucleus","Cell wall","Mitochondria"], a:"Nucleus"},
+{q:"Humans normally have how many pairs of chromosomes?", opts:["20","21","23","25"], a:"23"},
+{q:"Genes are located on:", opts:["Mitochondria","Chromosomes","Cytoplasm","Ribosomes"], a:"Chromosomes"},
+{q:"A matured sex cell is called:", opts:["Zygote","Gamete","Chromosome","Allele"], a:"Gamete"},
+{q:"Haploid gametes have:", opts:["One set of chromosomes","Two sets of chromosomes","Three sets of chromosomes","Four sets of chromosomes"], a:"One set of chromosomes"},
+{q:"Diploid cells have:", opts:["n chromosomes","2n chromosomes","3n chromosomes","4n chromosomes"], a:"2n chromosomes"},
+{q:"A zygote is formed when:", opts:["Two male gametes unite","Male and female gametes unite","Female gametes divide","Cells split"], a:"Male and female gametes unite"},
+{q:"Alleles control:", opts:["The same character in contrasting forms","Only eye colour","Growth rate","Diet"], a:"The same character in contrasting forms"},
+{q:"Phenotype is:", opts:["The observable traits of an organism","The gene combination only","The DNA sequence","The chromosome number"], a:"The observable traits of an organism"},
+{q:"Genotype refers to:", opts:["Only physical traits","The genetic make-up of an organism","Blood type only","Visible differences"], a:"The genetic make-up of an organism"},
+{q:"Dominant traits:", opts:["Are always hidden","Are expressed when present","Cannot be inherited","Appear only in recessive form"], a:"Are expressed when present"},
+{q:"Recessive traits:", opts:["Are always expressed","Are hidden when dominant gene is present","Control dominant features","Occur only in plants"], a:"Are hidden when dominant gene is present"},
+{q:"Homozygous means:", opts:["Two identical alleles","Two different alleles","One allele only","No alleles"], a:"Two identical alleles"},
+{q:"Heterozygous means:", opts:["Two identical alleles","Two different alleles","No alleles","One allele only"], a:"Two different alleles"},
+{q:"A hybrid is:", opts:["The offspring from genotypically different parents","An identical twin","A recessive organism","A mutated plant"], a:"The offspring from genotypically different parents"},
+{q:"Test cross is used to:", opts:["Determine genotype of an organism","Increase plant growth","Change phenotype","Count chromosomes"], a:"Determine genotype of an organism"},
+{q:"Mutation is:", opts:["Change in genetic make-up","Production of gametes","Eye colour change with age","Diet change"], a:"Change in genetic make-up"},
+{q:"Monohybrid cross studies:", opts:["One character at a time","Two characters at a time","Many characters at once","Colour traits only"], a:"One character at a time"},
+{q:"In a monohybrid cross, one parent has:", opts:["Two dominant alleles","Two recessive alleles","One of each type","Either A or B"], a:"Either A or B"},
+{q:"F1 generation refers to:", opts:["First filial generation","Second filial generation","Mutant offspring","Hybrid parents"], a:"First filial generation"},
+{q:"The location of a gene on a chromosome is called:", opts:["Allele","Locus","Centre","Genotype"], a:"Locus"},
+{q:"Which factor can affect how inherited traits are expressed?", opts:["Environment","Eye colour","Number of taste buds","Type of gametes"], a:"Environment"},
+];
+
+/* =========================
+   DOM BUILD
+   ========================= */
+const container = document.getElementById('questionsContainer');
+
+questions.forEach((Q, i) => {
+  const number = i + 1;
+  const div = document.createElement('div');
+  div.className = 'q';
+  const h = document.createElement('h4');
+  h.textContent = `${number}. ${Q.q}`;
+  div.appendChild(h);
+
+  const ans = document.createElement('div');
+  ans.className = 'answers';
+  Q.opts.forEach(opt => {
+    const id = `q${i}-${sanitizeId(opt)}`;
+    const lbl = document.createElement('label');
+    lbl.setAttribute('for', id);
+    const radio = document.createElement('input');
+    radio.type='radio'; radio.name=`q${i}`; radio.value=opt; radio.id=id; radio.required=true;
+    lbl.appendChild(radio);
+    lbl.appendChild(document.createTextNode(' ' + opt));
+    ans.appendChild(lbl);
+  });
+  div.appendChild(ans);
+  container.appendChild(div);
+});
+
+function sanitizeId(s){ return s.replace(/[^a-z0-9]+/gi,'-'); }
+
+/* =========================
+   TIMER (60 minutes)
+   ========================= */
+let timeLeft = 60 * 60; // seconds
+const timerEl = document.getElementById('timer');
+const timerInterval = setInterval(()=>{
+  if(timeLeft <= 0){
+    clearInterval(timerInterval);
+    timerEl.textContent = 'Time left: 00:00';
+    document.getElementById('quizForm').requestSubmit();
+    return;
+  }
+  const m = Math.floor(timeLeft/60).toString().padStart(2,'0');
+  const s = (timeLeft%60).toString().padStart(2,'0');
+  timerEl.textContent = `Time left: ${m}:${s}`;
+  timeLeft--;
+}, 1000);
+
+/* =========================
+   NAV CONTROLS (separate from submit)
+   ========================= */
+document.getElementById('toTop').onclick = ()=>window.scrollTo({top:0,behavior:'smooth'});
+document.getElementById('toBottom').onclick = ()=>window.scrollTo({top:document.body.scrollHeight,behavior:'smooth'});
+
+function firstUnansweredIndex(step=+1){
+  const total = questions.length;
+  let start = 0;
+  // check current viewport roughly
+  const qs = [...document.querySelectorAll('.q')];
+  const mid = window.scrollY + window.innerHeight/2;
+  let near = 0;
+  qs.forEach((el,idx)=>{
+    const r = el.getBoundingClientRect();
+    const y = r.top + window.scrollY;
+    if (y < mid) near = idx;
+  });
+  start = near;
+  for(let k=1;k<=total;k++){
+    const i = ((start + step*k) % total + total) % total;
+    if(!document.querySelector(`input[name="q${i}"]:checked`)) return i;
+  }
+  return -1;
+}
+document.getElementById('nextUnanswered').onclick = ()=>{
+  const idx = firstUnansweredIndex(+1);
+  if(idx>=0) document.querySelectorAll('.q')[idx].scrollIntoView({behavior:'smooth',block:'center'});
+};
+document.getElementById('prevUnanswered').onclick = ()=>{
+  const idx = firstUnansweredIndex(-1);
+  if(idx>=0) document.querySelectorAll('.q')[idx].scrollIntoView({behavior:'smooth',block:'center'});
+};
+
+/* =========================
+   SUBMIT / SCORE / HIGHLIGHT / SEND WRONGS
+   ========================= */
+const form = document.getElementById('quizForm');
+const result = document.getElementById('result');
+const breakdown = document.getElementById('breakdown');
+const failedNumbersEl = document.getElementById('failedNumbers');
+const failedListEl = document.getElementById('failedList');
+
+form.addEventListener('submit', async (e)=>{
+  e.preventDefault();
+  clearInterval(timerInterval);
+
+  const name = document.getElementById('studentName').value.trim();
+  if(!name){ alert('Please enter student name'); return; }
+
+  // Confirm before final submission
+  const ok = confirm('Are you sure you want to submit your answers?');
+  if(!ok) return;
+
+  // Gather answers and score
+  const formData = new FormData(form);
+  let score = 0;
+  const total = questions.length;
+  const wrongs = []; // for sending
+  const failedNumbers = [];
+
+  // Clear old highlighting
+  document.querySelectorAll('.answers label').forEach(l => {
+    l.classList.remove('correct','wrong');
+    const tag = l.querySelector('.tag');
+    if(tag) tag.remove();
+  });
+
+  for(let i=0;i<questions.length;i++){
+    const given = formData.get(`q${i}`);
+    const correct = questions[i].a;
+
+    // highlight selection + correct
+    const labels = [...document.querySelectorAll(`input[name="q${i}"]`)].map(inp=>inp.parentElement);
+    labels.forEach(lbl=>{
+      const val = lbl.querySelector('input').value;
+      if(val === correct){
+        addTag(lbl,'Correct');
+        lbl.classList.add('correct');
+      }
+    });
+
+    if(given === correct){
+      score++;
+    }else{
+      failedNumbers.push(i+1);
+      const wrongLabel = document.querySelector(`input[name="q${i}"]:checked`)?.parentElement;
+      if(wrongLabel){
+        addTag(wrongLabel,'Your choice');
+        wrongLabel.classList.add('wrong');
+      }
+      wrongs.push({
+        number: i+1,
+        question: questions[i].q,
+        your_answer: given ?? "(no answer)",
+        correct_answer: correct
+      });
+    }
+  }
+
+  // Show result to student
+  result.textContent = `${name}: You scored ${score} / ${total}.`;
+
+  // Show exactly which questions were failed
+  breakdown.hidden = false;
+  if(wrongs.length){
+    failedNumbersEl.textContent = `You missed these question numbers: ${failedNumbers.join(', ')}.`;
+    failedListEl.innerHTML = '';
+    wrongs.forEach(w=>{
+      const li = document.createElement('li');
+      li.innerHTML = `<strong>Q${w.number}.</strong> ${escapeHtml(w.question)}<br>
+        <em>Your answer:</em> ${escapeHtml(w.your_answer)}<br>
+        <em>Correct answer:</em> ${escapeHtml(w.correct_answer)}`;
+      failedListEl.appendChild(li);
+    });
+  }else{
+    failedNumbersEl.textContent = 'Perfect! You did not miss any question.';
+    failedListEl.innerHTML = '';
+  }
+
+  // Prepare payload: only wrong answers + summary
+  const payload = {
+    student_name: name,
+    score: `${score}/${total}`,
+    failed_numbers: failedNumbers.join(', '),
+    wrong_count: wrongs.length,
+    wrongs // only failed questions with correct answers
+  };
+
+  // Send to Formspree (teacher email)
+  try {
+    await fetch('https://formspree.io/f/mvgqwywl', {
+      method:'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({
+        subject: `Basic Science Quiz — ${name} — ${score}/${total}`,
+        message: `Student: ${name}\nScore: ${score}/${total}\nFailed numbers: ${payload.failed_numbers || 'None'}`,
+        payload
+      })
+    });
+    const note = document.createElement('div');
+    note.className='note';
+    note.textContent = 'Only the failed questions have been sent to the teacher email.';
+    result.appendChild(document.createElement('br'));
+    result.appendChild(note);
+  } catch(err) {
+    const warn = document.createElement('div');
+    warn.className='warn';
+    warn.textContent = 'Could not send results to email (network/CORS). Your score and feedback are shown above.';
+    result.appendChild(document.createElement('br'));
+    result.appendChild(warn);
+    console.error(err);
+  }
+});
+
+// Add a small tag to a label ("Correct" / "Your choice")
+function addTag(label, text){
+  if(label.querySelector('.tag')) return;
+  const span = document.createElement('span');
+  span.className = 'tag';
+  span.style.marginLeft = '6px';
+  span.textContent = `(${text})`;
+  label.appendChild(span);
+}
+
+// Accessibility: jump to first unanswered on invalid
+form.addEventListener('invalid', function(ev){
+  ev.preventDefault();
+  for(let i=0;i<questions.length;i++){
+    if(!document.querySelector(`input[name="q${i}"]:checked`)){
+      const el = document.querySelector(`input[name="q${i}"]`);
+      if(el){ el.scrollIntoView({behavior:'smooth',block:'center'}); el.focus(); }
+      break;
+    }
+  }
+}, true);
+
+// Escape helper
+function escapeHtml(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+</script>
+</body>
+</html>
