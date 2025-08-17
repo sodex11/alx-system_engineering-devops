@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Mathematics Quiz — Transformations & Polynomials (100 Questions)</title>
+<title>JS3 Basic Science — 100-Question Objective Test</title>
 <style>
   :root{
     --bg:#f6f7fb;--card:#fff;--ink:#111;--muted:#555;
@@ -33,25 +33,25 @@
   .answers label{display:block;cursor:pointer;padding:.35rem .5rem;border-radius:8px;border:1px solid transparent}
   .answers input{margin-right:.45rem}
   .answers label:hover{background:#f8fafc}
-  .correct{background:var(--okbg)!important;border-color:#bae6fd;font-weight:600;}
-  .wrong{background:var(--badbg)!important;border-color:#fecaca;}
-  .tag{font-size: 0.85em; color: var(--muted); opacity: 0.9;}
+  .correct{background:var(--okbg)!important;border-color:#bae6fd}
+  .correct .tag{color:var(--ok);font-weight:700}
+  .wrong{background:var(--badbg)!important;border-color:#fecaca}
+  .wrong .tag{color:var(--bad);font-weight:700}
   .submit-wrap{display:flex;gap:12px;align-items:center;margin-top:14px}
   .submit-wrap .left{display:flex;gap:8px;align-items:center}
   #result{margin-top:10px;font-weight:700}
   .summary{background:#fff;border:1px dashed #cbd5e1;border-radius:10px;padding:10px;margin-top:10px}
   .summary h5{margin:.2rem 0 .4rem}
-  .summary li { margin-bottom: 0.5rem; }
   footer{margin:2rem 0;text-align:center;color:var(--muted);font-size:.9rem}
-  .note{color:#064e3b;font-size:.9rem; margin-top: 4px;}
-  .warn{color:#7f1d1d;font-size:.9rem; margin-top: 4px;}
+  .note{color:#064e3b;font-size:.9rem}
+  .warn{color:#7f1d1d;font-size:.9rem}
   @media(max-width:700px){.nav-row{flex-direction:column;align-items:stretch}.nav-row .pager{justify-content:space-between}}
 </style>
 </head>
 <body>
 <header>
-  <h1>Mathematics Quiz — Transformations & Polynomials (100 Questions)</h1>
-  <div class="sub">Chapter 2: Transformations • Chapter 3: Polynomial Functions • 90 minutes</div>
+  <h1>JS3 Basic Technology — Objective Test (70 Questions)</h1>
+  <div class="sub">Sections A → B → C → D • 60 minutes • Continuous numbering</div>
 </header>
 
 <main>
@@ -60,9 +60,10 @@
       <label class="name">Student full name
         <input id="studentName" name="studentName" type="text" placeholder="Enter full name" required />
       </label>
-      <div id="timer" aria-live="polite">Time left: 90:00</div>
+      <div id="timer" aria-live="polite">Time left: 60:00</div>
     </div>
 
+    <!-- Navigation kept separate from Submit -->
     <div class="nav-row" aria-label="navigation-not-submit">
       <div class="pager">
         <button type="button" class="btn ghost" id="toTop">↑ Top</button>
@@ -75,8 +76,10 @@
     </div>
 
     <section class="questions" id="questionsContainer">
-      </section>
+      <!-- Questions injected by script -->
+    </section>
 
+    <!-- Submit is isolated from nav controls -->
     <div class="submit-wrap">
       <div class="left">
         <button type="submit" class="btn primary" id="submitBtn">Submit answers</button>
@@ -93,115 +96,101 @@
 </main>
 
 <footer>
-  <div>Quiz on Transformations and Polynomial Functions.</div>
+  <div>Built for JS3 Basic Technology — Design, Metalwork, Woodwork • Auto-sends only failed questions to teacher email.</div>
 </footer>
 
 <script>
 /* =========================
-   QUIZ DATA (100 MCQs)
+   QUIZ DATA (70 MCQs)
    ========================= */
+
 const questions = [
-  // ----- Chapter 2: Transformations (1–50) -----
-  { q: "The graph of y = f(x) + 3 is obtained from y = f(x) by", opts: ["left 3","right 3","up 3","down 3"], a: "up 3" },
-  { q: "The transformation from y = f(x) to y = f(x - 5) is", opts: ["left 5","right 5","up 5","down 5"], a: "right 5" },
-  { q: "The graph of y = -f(x) is the reflection of y = f(x) in the", opts: ["x-axis","y-axis","line y = x","origin"], a: "x-axis" },
-  { q: "The graph of y = f(-x) is the reflection of y = f(x) in the", opts: ["x-axis","y-axis","line y = x","origin"], a: "y-axis" },
-  { q: "In y = a f(x), the parameter a produces a", opts: ["horizontal stretch by |a|","vertical stretch by |a|","horizontal compression by |a|","vertical compression by |a|"], a: "vertical stretch by |a|" },
-  { q: "In y = f(kx) with k > 1, the graph of y = f(x) is", opts: ["horizontally stretched by factor k","horizontally compressed by factor k","vertically stretched by k","vertically compressed by k"], a: "horizontally compressed by factor k" },
-  { q: "The transformation from y = f(x) to y = 2f(x - 1) + 4 is", opts: ["right 1, vertical stretch 2, up 4","left 1, vertical stretch 2, up 4","right 2, vertical stretch 1, up 4","right 1, horizontal stretch 2, up 4"], a: "right 1, vertical stretch 2, up 4" },
-  { q: "The order that usually guarantees correct mapping in y = a f(k(x - d)) + c is", opts: ["vertical, then horizontal, then shifts","horizontal (inside), then vertical (outside), then shifts","shifts first","any order produces same points"], a: "horizontal (inside), then vertical (outside), then shifts" },
-  { q: "If P(3, -2) lies on y = f(x), then on y = f(x) + 5 the image point is", opts: ["(3, 3)","(8, -2)","(3, -7)","(-2, 3)"], a: "(3, 3)" },
-  { q: "If P(2, 4) lies on y = f(x), then on y = f(x - 3) the image point is", opts: ["(-1, 4)","(5, 4)","(2, 7)","(2, 1)"], a: "(5, 4)" },
-  { q: "If P(-6, 3) is on y = f(x), then on y = -f(x) the image point is", opts: ["(-6, -3)","(6, 3)","(6, -3)","(-3, -6)"], a: "(-6, -3)" },
-  { q: "For y = f(2x), a point (x, y) on y = f(x) maps to", opts: ["(2x, y)","(x/2, y)","(x, 2y)","(2x, 2y)"], a: "(x/2, y)" },
-  { q: "The transformation from y = f(x) to y = f(-(x + 4)) - 1 is", opts: ["reflect in y-axis, left 4, down 1","left 4, reflect in y-axis, down 1","right 4, reflect in x-axis, down 1","reflect in y-axis, right 4, down 1"], a: "left 4, reflect in y-axis, down 1" },
-  { q: "The domain of y = f(x - 2) compared to y = f(x) is", opts: ["shifted left by 2","shifted right by 2","unchanged","doubled"], a: "unchanged" },
-  { q: "The range of y = 3f(x) - 2 is obtained by", opts: ["vertical stretch by 3, then down 2","up 2, then stretch by 3","horizontal stretch by 3, then down 2","reflect, then shift"], a: "vertical stretch by 3, then down 2" },
-  { q: "A vertical compression by factor 1/2 is given by", opts: ["y = f(2x)","y = 1/2 f(x)","y = f(1/2 x)","y = 2f(x)"], a: "y = 1/2 f(x)" },
-  { q: "A horizontal stretch by factor 3 is given by", opts: ["y = f(3x)","y = f(x/3)","y = 3f(x)","y = 1/3 f(x)"], a: "y = f(x/3)" },
-  { q: "The image of P(1, -5) on y = -2f(x) + 3 is", opts: ["(1, -10)","(1, 13)","(1, 7)","(1, -7)"], a: "(1, 13)" },
-  { q: "If y = |f(x)|, the portion of y = f(x) below the x-axis", opts: ["disappears","reflects above the x-axis","shifts up 1","remains unchanged"], a: "reflects above the x-axis" },
-  { q: "If y = f(|x|), then the graph is", opts: ["the right half of y = f(x) mirrored to the left","the top half mirrored down","stretched vertically","unchanged"], a: "the right half of y = f(x) mirrored to the left" },
-  { q: "The graph of y = f(x) - 6 is", opts: ["left 6","right 6","up 6","down 6"], a: "down 6" },
-  { q: "The mapping rule for y = -f( (1/2)(x + 4) ) is", opts: ["left 4, horizontal stretch 2, reflect in x-axis","right 4, horizontal stretch 2, reflect in x-axis","left 4, horizontal compression 2, reflect in y-axis","right 4, vertical stretch 2, reflect in x-axis"], a: "left 4, horizontal stretch 2, reflect in x-axis" },
-  { q: "If f(x) has domain [0, ∞), the domain of f(x - 5) is", opts: ["[0, ∞)","[5, ∞)","(-∞, 0]","(-∞, -5]"], a: "[5, ∞)" },
-  { q: "For g(x) = 2f(-3x) + 1, the inside factor causes a", opts: ["horizontal stretch by 3","horizontal compression by 3","vertical stretch 2","vertical shift 1"], a: "horizontal compression by 3" },
-  { q: "The inverse of a function (when it exists) reflects the graph of the function in", opts: ["x-axis","y-axis","line y = x","origin"], a: "line y = x" },
-  { q: "A function has an inverse that is also a function if it is", opts: ["even","odd","one-to-one","periodic"], a: "one-to-one" },
-  { q: "The effect of y = f(x) + c on range is", opts: ["shift up c","compress by c","reflect","no change"], a: "shift up c" },
-  { q: "The effect of y = f(x - d) on domain is", opts: ["shift right d","shift left d","no change","reflect"], a: "shift right d" },
-  { q: "For y = a f(x) + c with a < 0, the graph is", opts: ["reflected in y-axis","reflected in x-axis then shifted up/down","rotated 90°","unchanged"], a: "reflected in x-axis then shifted up/down" },
-  { q: "If f(x) = sqrt(x), then y = f(x - 4) + 2 has domain", opts: ["(-∞, ∞)","[4, ∞)","[2, ∞)","(-∞, 4]"], a: "[4, ∞)" },
-  { q: "The image of P(0, 7) on y = f(2x) - 3 is", opts: ["(0, 7)","(0, 4)","(0, -10)","(0, -3)"], a: "(0, 4)" },
-  { q: "A vertical stretch by factor 4 followed by down 1 is", opts: ["y = f(4x) - 1","y = 4f(x) - 1","y = f(x) - 1","y = 1/4 f(x) - 1"], a: "y = 4f(x) - 1" },
-  { q: "If f is odd, then f(-x) equals", opts: ["f(x)","-f(x)","f(|x|)","|f(x)|"], a: "-f(x)" },
-  { q: "If f is even, then its graph is symmetric about the", opts: ["x-axis","y-axis","origin","line y = x"], a: "y-axis" },
-  { q: "The composite f(g(x)) applies", opts: ["f then g","g then f","both at once","neither"], a: "g then f" },
-  { q: "The x-intercepts of y = |x - 3| are", opts: ["x = 3 only","x = 0, 3","x = -3, 3","none"], a: "x = 3 only" },
-  { q: "The minimum of y = (x - 4)^2 + 5 occurs at", opts: ["(4, 5)","(-4, 5)","(5, 4)","(0, 5)"], a: "(4, 5)" },
-  { q: "The transformation from y = x^2 to y = - (x + 1)^2 + 2 is", opts: ["right 1, reflect x-axis, up 2","left 1, reflect x-axis, up 2","left 1, reflect y-axis, up 2","right 1, reflect y-axis, up 2"], a: "left 1, reflect x-axis, up 2" },
-  { q: "The graph of y = sqrt(4 - (x - 1)^2) is a", opts: ["line","semicircle","parabola","hyperbola"], a: "semicircle" },
-  { q: "The domain of y = sqrt(9 - (x + 2)^2) is", opts: ["|x + 2| <= 3","|x + 2| >= 3","all real x","x >= -2"], a: "|x + 2| <= 3" },
-  { q: "The range of y = 2|x| - 3 is", opts: ["y <= -3","y >= -3","y >= 3","all real y"], a: "y >= -3" },
-  { q: "For y = (1/2) f(-x) + 4, the sequence is", opts: ["reflect in y-axis, vertical compress by 2, up 4","compress, then reflect, up 4","up 4, then reflect","reflect in x-axis, up 4"], a: "reflect in y-axis, vertical compress by 2, up 4" },
-  { q: "If f(x) = |x|, then f(x - 5) has vertex at", opts: ["(0, 0)","(5, 0)","(0, 5)","(-5, 0)"], a: "(5, 0)" },
-  { q: "The inverse of y = 2x - 3 is", opts: ["y = (x + 3)/2","y = 2(x + 3)","y = (x - 3)/2","y = 2x + 3"], a: "y = (x + 3)/2" },
-  { q: "The function y = sqrt(x - 1) shifted left 3 and down 2 is", opts: ["y = sqrt(x - 4) - 2","y = sqrt(x + 3) - 2","y = sqrt(x + 3) + 2","y = sqrt(x - 1) - 2"], a: "y = sqrt(x + 3) - 2" },
-  { q: "A horizontal compression by factor 1/2 is", opts: ["y = f(2x)","y = f(x/2)","y = 2f(x)","y = 1/2 f(x)"], a: "y = f(2x)" },
-  { q: "If y = f(x) passes through (-2, 5), then y = 3f(x) + 1 passes through", opts: ["(-2, 16)","(-2, 6)","(-2, 14)","(-2, -14)"], a: "(-2, 16)" },
-  { q: "The effect of y = f(x + 7) is a shift", opts: ["right 7","left 7","up 7","down 7"], a: "left 7" },
-  { q: "If f(x) is one-to-one and continuous, then its inverse is obtained by", opts: ["rotating 90°","reflecting in y = x","reflecting in y-axis","translating up"], a: "reflecting in y = x" },
-  { q: "The parent of y = -3|x + 2| + 5 is", opts: ["y = x","y = x^2","y = |x|","y = sqrt(x)"], a: "y = |x|" },
-  { q: "The degree of p(x) = 3x^5 - 7x^2 + 1 is", opts: ["2","3","4","5"], a: "5" },
-  { q: "The leading coefficient of -2x^4 + 5x is", opts: ["-2","5","4","1"], a: "-2" },
-  { q: "End behaviour of y = -x^6 + 3x is", opts: ["up left, up right","down left, down right","up left, down right","down left, up right"], a: "down left, down right" },
-  { q: "A zero of multiplicity 3 at x = 2 means the graph", opts: ["crosses and flattens at x = 2","touches and turns","has an asymptote","is undefined"], a: "crosses and flattens at x = 2" },
-  { q: "The y-intercept of y = 2x^3 - x^2 + 4 is", opts: ["-1","0","2","4"], a: "4" },
-  { q: "If x = a is a zero, then (x - a) is", opts: ["a factor","a divisor remainder 1","not related","a constant"], a: "a factor" },
-  { q: "The Factor Theorem says x - k is a factor iff", opts: ["p(k) = 1","p(k) = 0","p'(k) = 0","p(k) = k"], a: "p(k) = 0" },
-  { q: "The Remainder Theorem: dividing p(x) by x - k leaves remainder", opts: ["p'(k)","k","p(k)","0"], a: "p(k)" },
-  { q: "A quartic with positive leading coefficient has end behaviour", opts: ["up, up","down, down","up, down","down, up"], a: "up, up" },
-  { q: "The graph of y = (x + 1)^2 (x - 3) has how many distinct real zeros?", opts: ["0","1","2","3"], a: "2" },
-  { q: "Multiplicity 2 at a zero means the graph", opts: ["crosses","touches and turns","has a hole","has an asymptote"], a: "touches and turns" },
-  { q: "Synthetic division is a shortcut for dividing by", opts: ["any quadratic","x - k","ax^2 + b","x^2 + k"], a: "x - k" },
-  { q: "If p(x) has degree 5, then p'(x) has degree", opts: ["6","4","5","3"], a: "4" },
-  { q: "The number of turning points of a degree-n polynomial is at most", opts: ["n","n - 1","n + 1","2n"], a: "n - 1" },
-  { q: "If p(x) = (x - 2)(x + 1)^2, then the multiplicity at x = -1 is", opts: ["1","2","3","0"], a: "2" },
-  { q: "A polynomial function is continuous and differentiable", opts: ["nowhere","at only integers","everywhere on R","except at zeros"], a: "everywhere on R" },
-  { q: "The real zeros of x^3 - 4x are", opts: ["-4, 0","-2, 2","-sqrt(4), sqrt(4)","-2, 0, 2"], a: "-2, 0, 2" },
-  { q: "The x-intercepts of y = (x - 1)^2 (x + 3) are", opts: ["x = 1, -3","x = 1 only","x = -3 only","none"], a: "x = 1, -3" },
-  { q: "If p(2) = 0 and x = 2 is a triple zero, then near x = 2 the graph", opts: ["touches and turns","crosses with flattening","vertical asymptote","hole"], a: "crosses with flattening" },
-  { q: "The leading term of p(x) = (2x - 1)(-x^2) is", opts: ["-2x^3","2x^3","x^2","-x^2"], a: "-2x^3" },
-  { q: "To find a polynomial from its zeros x = -1, 2, 2, a minimal form is", opts: ["(x + 1)(x - 2)","(x + 1)(x - 2)^2","(x - 1)(x - 2)^2","(x + 1)^2 (x - 2)"], a: "(x + 1)(x - 2)^2" },
-  { q: "If the remainder of p(x) ÷ (x - 4) is 7, then p(4) =", opts: ["0","4","7","11"], a: "7" },
-  { q: "For y = -3(x + 2)^4 + 5, the vertex is", opts: ["(-2, 5)","(2, 5)","(-2, -5)","(0, 5)"], a: "(-2, 5)" },
-  { q: "The graph of an odd-degree polynomial with negative leading coefficient goes", opts: ["up left, up right","down left, down right","up left, down right","down left, up right"], a: "down left, up right" },
-  { q: "If p(x) = x^4 - 5x^2 + 4, then zeros include", opts: ["±1, ±2","±4 only","±sqrt(5)","none real"], a: "±1, ±2" },
-  { q: "The sum of multiplicities of all zeros equals the", opts: ["constant term","degree","leading coefficient","number of factors"], a: "degree" },
-  { q: "A factor of x^4 - 1 is", opts: ["x^2 + 1","x^2 - 1","both A and B","neither"], a: "both A and B" },
-  { q: "If x - 3 is a factor of 2x^3 + a x^2 + b x + 6, then a, b satisfy", opts: ["54 + 9a + 3b + 6 = 0","54 + 9a + 3b - 6 = 0","a = b = 0","a = b = -3"], a: "54 + 9a + 3b + 6 = 0" },
-  { q: "A polynomial of degree 0 is", opts: ["linear","constant (non-zero)","quadratic","not a polynomial"], a: "constant (non-zero)" },
-  { q: "The graph of y = x^3 has", opts: ["one turning point","two turning points","none","three turning points"], a: "none" },
-  { q: "The y-intercept of y = (x - 2)(x + 1)(x - 3) is", opts: ["-6","6","-3","3"], a: "6" },
-  { q: "If a polynomial has an odd multiplicity at x = a, then the graph", opts: ["crosses the x-axis at a","touches at a","has a hole at a","has an asymptote at a"], a: "crosses the x-axis at a" },
-  { q: "Long division of x^3 + 2x^2 - 5 by x - 1 leaves remainder", opts: ["-4","-6","-2","0"], a: "-2" },
-  { q: "Using the Remainder Theorem on dividing x^3 + 2x^2 - 5 by x + 1, the remainder is", opts: ["-4","-2","0","4"], a: "-4" },
-  { q: "If p(x) is degree 4 with 3 distinct real zeros, one zero must have multiplicity", opts: ["1","2","3","4"], a: "2" },
-  { q: "The graph of y = -(x - 1)^2 (x + 2) near x = 1", opts: ["crosses","touches and turns","asymptote","hole"], a: "touches and turns" },
-  { q: "End behaviour of y = 5x^7 is", opts: ["down left, up right","up left, down right","up, up","down, down"], a: "down left, up right" },
-  { q: "If p(x) is even, then its graph is symmetric about the", opts: ["x-axis","y-axis","origin","line y = x"], a: "y-axis" },
-  { q: "If p(x) is odd, then its graph is symmetric about the", opts: ["x-axis","y-axis","origin","line y = x"], a: "origin" },
-  { q: "The leading term of (x - 2)^3 is", opts: ["x^3","-8","3x^2","-2x^2"], a: "x^3" },
-  { q: "If p(x) = x^4 - 3x^3 + 2x, then p(0) =", opts: ["0","2","-3","1"], a: "0" },
-  { q: "The degree of the product (x^2 + 1)(x^3 - 2) is", opts: ["2","3","5","6"], a: "5" },
-  { q: "The constant term of (x - 1)(x + 2)(x - 3) is", opts: ["-6","+6","-(1·2·3)","+ (1·2·3)"], a: "+6" },
-  { q: "If x = 0 is a zero of multiplicity 2 of p(x), then p(x) is divisible by", opts: ["x","x^2","x^3","x^4"], a: "x^2" },
-  { q: "The number of real zeros of y = x^4 + 1 is", opts: ["0","1","2","4"], a: "0" },
-  { q: "If a polynomial has degree 6, the maximum number of turning points is", opts: ["6","5","4","3"], a: "5" },
-  { q: "For p(x) = x^3 - 6x^2 + 11x - 6, one zero is", opts: ["1","2","3","all of A, B, C"], a: "all of A, B, C" },
-  { q: "The graph of y = (x + 4)(x - 1)^2 at x = -4", opts: ["crosses","touches","hole","asymptote"], a: "crosses" },
-  { q: "If p(x) has leading coefficient negative and even degree, then end behaviour is", opts: ["up, up","down, down","up left, down right","down left, up right"], a: "down, down" },
-  { q: "The x-intercepts of y = x(x - 5)(x + 2) are", opts: ["x = -2, 0, 5","x = 2, 0, -5","x = 5, 2 only","none"], a: "x = -2, 0, 5" }
+/* ---------- Section A: Design Stages & Processes (1–15) ---------- */
+{q:"Light travels in:", opts:\["Curved paths","Straight lines","Circles","Spirals"], a:"Straight lines"},
+{q:"The straight line path of light is called a:", opts:\["Beam","Ray","Flash","Line"], a:"Ray"},
+{q:"A mirror with a flat surface is called a:", opts:\["Concave mirror","Plane mirror","Convex mirror","Spherical mirror"], a:"Plane mirror"},
+{q:"The ray of light striking a mirror is called the:", opts:\["Reflected ray","Incident ray","Refracted ray","Normal ray"], a:"Incident ray"},
+{q:"The line drawn perpendicular to the mirror at the point of incidence is called the:", opts:\["Axis","Base","Normal","Tangent"], a:"Normal"},
+{q:"In physics, 'normal' means:", opts:\["Parallel","Straight","Perpendicular","Curved"], a:"Perpendicular"},
+{q:"The angle between the incident ray and the normal is the:", opts:\["Angle of reflection","Angle of refraction","Angle of incidence","Right angle"], a:"Angle of incidence"},
+{q:"The angle between the reflected ray and the normal is the:", opts:\["Angle of incidence","Angle of deviation","Angle of reflection","Straight angle"], a:"Angle of reflection"},
+{q:"The law of reflection states that:", opts:\["Angle of incidence = Angle of reflection","Angle of incidence = Angle of refraction","Angle of reflection > Angle of incidence","Light always bends"], a:"Angle of incidence = Angle of reflection"},
+{q:"A ray diagram should always show:", opts:\["Waves","Arrowheads on rays","Dots","Shadows"], a:"Arrowheads on rays"},
+{q:"The bending of light as it passes from one medium to another is called:", opts:\["Reflection","Refraction","Dispersion","Diffusion"], a:"Refraction"},
+{q:"A medium is:", opts:\["Any material that light passes through","A mirror surface","A type of lens","A prism"], a:"Any material that light passes through"},
+{q:"The speed of light in air (approx) is:", opts:\["225,000 km/s","200,000 km/s","300,000 km/s","150,000 km/s"], a:"300,000 km/s"},
+{q:"The speed of light in water (approx) is:", opts:\["225,000 km/s","300,000 km/s","200,000 km/s","250,000 km/s"], a:"225,000 km/s"},
+{q:"The speed of light in glass (as given) is:", opts:\["300,000 km/s","225,000 km/s","200,000 km/s","250,000 km/s"], a:"200,000 km/s"},
+{q:"When light travels from air into glass, it:", opts:\["Speeds up","Slows down","Stops","Scatters"], a:"Slows down"},
+{q:"When light passes from glass into air, it:", opts:\["Slows down","Speeds up","Becomes invisible","Disappears"], a:"Speeds up"},
+{q:"Light bends \_\_\_\_\_\_ the normal when entering a denser medium.", opts:\["Towards","Away from","Parallel to","Against"], a:"Towards"},
+{q:"Light bends \_\_\_\_\_\_ the normal when leaving a denser medium into air.", opts:\["Towards","Away from","Opposite","Below"], a:"Away from"},
+{q:"A coin that appears when water is poured into a cup (though previously hidden) is due to:", opts:\["Reflection","Refraction","Dispersion","Absorption"], a:"Refraction"},
+{q:"The splitting of white light into its component colours is called:", opts:\["Refraction","Dispersion","Reflection","Transmission"], a:"Dispersion"},
+{q:"Newton used a \_\_\_\_\_\_ to split white light into colours.", opts:\["Concave lens","Convex lens","Prism","Plane mirror"], a:"Prism"},
+{q:"The band of colours seen when white light is split is called a:", opts:\["Spectrum","Beam","Rainbow","Shade"], a:"Spectrum"},
+{q:"White light commonly contains how many main colours in the spectrum?", opts:\["5","6","7","8"], a:"7"},
+{q:"The correct order of colours in the spectrum from red is remembered by:", opts:\["VIBGYOR","ROYGBIV","RYOBVIG","BIVGYOR"], a:"ROYGBIV"},
+{q:"Which colour is refracted the most in a prism?", opts:\["Red","Yellow","Violet","Green"], a:"Violet"},
+{q:"Which colour is refracted the least in a prism?", opts:\["Blue","Green","Red","Violet"], a:"Red"},
+{q:"A rainbow is formed due to:", opts:\["Reflection only","Refraction and reflection inside water drops","Dispersion in air","Absorption of light"], a:"Refraction and reflection inside water drops"},
+{q:"For a rainbow to be seen, the Sun must be:", opts:\["Overhead","In front of the observer","Behind the observer","To the left of the observer"], a:"Behind the observer"},
+{q:"'ROY G BIV' helps to remember:", opts:\["Seven continents","Seven colours of the spectrum","Seven planets","Seven galaxies"], a:"Seven colours of the spectrum"},
+{q:"The three primary colours of light are:", opts:\["Red, Yellow, Blue","Red, Green, Blue","Yellow, Green, Blue","Red, Orange, Violet"], a:"Red, Green, Blue"},
+{q:"Red + Green light produces:", opts:\["Blue","Yellow","Magenta","Cyan"], a:"Yellow"},
+{q:"Red + Blue light produces:", opts:\["Cyan","Magenta","Yellow","White"], a:"Magenta"},
+{q:"Blue + Green light produces:", opts:\["Yellow","Cyan","Magenta","Red"], a:"Cyan"},
+{q:"Red + Green + Blue light together produce:", opts:\["Black","White","Yellow","Violet"], a:"White"},
+{q:"A red filter placed over white light will:", opts:\["Transmit all colours","Transmit only red light","Transmit green and blue","Block only red"], a:"Transmit only red light"},
+{q:"A green filter will primarily absorb which colours?", opts:\["Green light","Red and blue light","All light","White light"], a:"Red and blue light"},
+{q:"A white object appears white because it:", opts:\["Reflects only red","Reflects all colours equally","Absorbs all colours","Reflects only green"], a:"Reflects all colours equally"},
+{q:"A black object appears black because it:", opts:\["Reflects all colours","Absorbs all colours","Reflects only red","Reflects only blue"], a:"Absorbs all colours"},
+{q:"A yellow flower appears yellow because it:", opts:\["Emits yellow light","Reflects yellow and absorbs other colours","Absorbs yellow light","Transmits all colours"], a:"Reflects yellow and absorbs other colours"},
+{q:"Our galaxy is called the:", opts:\["Andromeda","Milky Way","Canis Major","Universe"], a:"Milky Way"},
+{q:"The Milky Way is a \_\_\_\_\_\_ galaxy.", opts:\["Spiral","Elliptical","Irregular","Circular"], a:"Spiral"},
+{q:"Most of the stars we see at night belong to:", opts:\["Other galaxies","Our Milky Way galaxy","Canis Major galaxy","Elliptical galaxies"], a:"Our Milky Way galaxy"},
+{q:"The force that holds galaxies together is:", opts:\["Magnetism","Gravity","Friction","Pressure"], a:"Gravity"},
+{q:"The estimated number of stars in the Milky Way (approx) is:", opts:\["25 million","250 million","250 billion","250 trillion"], a:"250 billion"},
+{q:"The nearest known galaxy to the Milky Way mentioned is:", opts:\["Canis Minor","Canis Major Dwarf","Andromeda","Orion"], a:"Canis Major Dwarf"},
+{q:"Scientists estimated the number of galaxies in the Universe to be about:", opts:\["100,000","10 million","1 billion","100 billion"], a:"100 billion"},
+{q:"Galaxies are made of:", opts:\["Only stars","Stars, dust, and gas","Only dust","Planets only"], a:"Stars, dust, and gas"},
+{q:"At light speed, crossing the Milky Way would take about:", opts:\["10,000 years","100,000 years","1,000,000 years","1 billion years"], a:"100,000 years"},
+{q:"The mass of the Milky Way is about \_\_\_\_\_ times the mass of the Sun (given):", opts:\["1,500","15,000","1,500,000","1,500,000,000,000"], a:"1,500,000,000,000"},
+{q:"Asteroids are best described as:", opts:\["Large planets","Small rocky objects orbiting the Sun","Stars","Moons"], a:"Small rocky objects orbiting the Sun"},
+{q:"Most asteroids are found in the:", opts:\["Milky Way","Universe","Asteroid belt","Moon’s orbit"], a:"Asteroid belt"},
+{q:"The asteroid belt lies between the orbits of:", opts:\["Earth and Mars","Mars and Jupiter","Jupiter and Saturn","Venus and Earth"], a:"Mars and Jupiter"},
+{q:"The largest asteroid named in the text is:", opts:\["Itokawa","Ceres","Vesta","Pallas"], a:"Ceres"},
+{q:"Ceres was discovered in the year:", opts:\["1601","1701","1801","1901"], a:"1801"},
+{q:"Ceres has an approximate diameter of:", opts:\["975 km","200 km","2,000 km","975 m"], a:"975 km"},
+{q:"The typical shape of most asteroids is described as:", opts:\["Perfectly round","Cube-like","Potato-shaped (irregular)","Pyramid"], a:"Potato-shaped (irregular)"},
+{q:"Craters on asteroids like Ceres are formed by:", opts:\["Volcanic eruptions","Impacts","Explosions inside","Earthquakes"], a:"Impacts"},
+{q:"A small asteroid visited in 2005 and sampled by spacecraft is called:", opts:\["Ceres","Itokawa","Pallas","Juno"], a:"Itokawa"},
+{q:"Asteroids are believed to be:", opts:\["Fragments left over from Solar System formation","Mini planets that never grew","Both A and B","None of the above"], a:"Both A and B"},
+{q:"Most asteroids orbit the Sun between Mars and Jupiter in a region called the:", opts:\["Kuiper belt","Oort cloud","Asteroid belt","Heliosphere"], a:"Asteroid belt"},
+{q:"The smallest studied asteroid mentioned is about:", opts:\["975 km across","2 m across","530 m across","250 km across"], a:"2 m across"},
+{q:"Some asteroids are single solid rocks and spin quickly; this is because their gravity is:", opts:\["Very strong","Weak","Variable","Infinite"], a:"Weak"},
+{q:"Tidal forces can change an asteroid's shape when it:", opts:\["Spins in place","Passes near a large planet","Is in deep space","Grows larger"], a:"Passes near a large planet"},
+{q:"Scientists estimate a large asteroid impacts Earth about every:", opts:\["1,300 years","13,000 years","130,000 years","1,300,000 years"], a:"130,000 years"},
+{q:"Many small asteroids do not reach Earth's surface because they:", opts:\["Break up in the atmosphere","Orbit the Moon instead","Sink into oceans","Pass by harmlessly"], a:"Break up in the atmosphere"},
+{q:"Two reasons why asteroids impact Earth are:", opts:\["Earth’s magnetic field and storms","Earth’s gravity and asteroid orbits passing close to Earth","Volcanic activity and tides","Human activity and moon phases"], a:"Earth’s gravity and asteroid orbits passing close to Earth"},
+{q:"Which of these is NOT one of the three primary colours of light?", opts:\["Red","Green","Blue","Yellow"], a:"Yellow"},
+{q:"Red and blue light mixed produce which colour?", opts:\["Cyan","Magenta","Yellow","Black"], a:"Magenta"},
+{q:"If a red cube is viewed under blue light it appears:", opts:\["Red","Blue","Black","White"], a:"Black"},
+{q:"A blue cube under red light appears:", opts:\["Blue","Red","Black","White"], a:"Black"},
+{q:"A white object in blue light will appear:", opts:\["White","Blue","Black","Red"], a:"White"},
+{q:"In a ray diagram, the normal is usually drawn as a:", opts:\["Solid line","Curved line","Dashed line","Zig-zag line"], a:"Dashed line"},
+{q:"When drawing ray diagrams, which tool is recommended for accurate lines?", opts:\["Freehand","Ruler and protractor","Pencil only","Scissors"], a:"Ruler and protractor"},
+{q:"In the refraction example, when light passes from air into water, the angle of incidence compared to the angle of refraction is:", opts:\["Smaller than the angle of refraction","Greater than the angle of refraction","Equal to the angle of refraction","Zero"], a:"Greater than the angle of refraction"},
+{q:"When light passes from water into air, the refracted ray is bent:", opts:\["Towards the normal","Away from the normal","Parallel to the normal","Perpendicular to the normal"], a:"Away from the normal"},
+{q:"Which everyday device uses refraction to help people see more clearly?", opts:\["Mirror","Prism","Lens (in glasses)","Filter"], a:"Lens (in glasses)"},
+{q:"Which device did Newton use to show white light splits into colours?", opts:\["Mirror","Glass block shaped like a triangle (prism)","Lens","Filter"], a:"Glass block shaped like a triangle (prism)"},
+{q:"Which colour is refracted through the smallest angle in a prism experiment?", opts:\["Violet","Blue","Green","Red"], a:"Red"},
+{q:"Which colour is refracted through the largest angle in a prism experiment?", opts:\["Red","Orange","Yellow","Violet"], a:"Violet"},
+{q:"In the prism experiment, moving the screen closer to the prism causes the colours to:", opts:\["Become more concentrated and possibly brighter","Spread out and dimmer","Disappear","Change order"], a:"Become more concentrated and possibly brighter"},
+{q:"Moving the screen further away from the prism causes the colours to:", opts:\["Become more concentrated","Spread out and possibly dimmer","Swap places","Turn black"], a:"Spread out and possibly dimmer"},
+{q:"The process of using coloured filters to remove colours from white light is called:", opts:\["Addition of light","Subtraction of light","Dispersion","Reflection"], a:"Subtraction of light"},
+{q:"If green light shines on a red filter, the result will be:", opts:\["Only green transmitted","Only red transmitted","No light transmitted","White light transmitted"], a:"No light transmitted"},
+{q:"Which is an example of adding colours of light?", opts:\["Using a red filter on white light","Overlapping red and green beams to get yellow","Filtering out blue with a yellow filter","Absorbing colours"], a:"Overlapping red and green beams to get yellow"}
 ];
 
 /* =========================
@@ -236,18 +225,15 @@ questions.forEach((Q, i) => {
 function sanitizeId(s){ return s.replace(/[^a-z0-9]+/gi,'-'); }
 
 /* =========================
-   TIMER (90 minutes)
+   TIMER (60 minutes)
    ========================= */
-let timeLeft = 90 * 60; // seconds
+let timeLeft = 60 * 60; // seconds
 const timerEl = document.getElementById('timer');
-const submitBtn = document.getElementById('submitBtn');
-
 const timerInterval = setInterval(()=>{
   if(timeLeft <= 0){
     clearInterval(timerInterval);
     timerEl.textContent = 'Time left: 00:00';
-    alert("Time is up! Your answers will be submitted automatically.");
-    submitBtn.click(); // Trigger form submission
+    document.getElementById('quizForm').requestSubmit();
     return;
   }
   const m = Math.floor(timeLeft/60).toString().padStart(2,'0');
@@ -257,61 +243,37 @@ const timerInterval = setInterval(()=>{
 }, 1000);
 
 /* =========================
-   NAV CONTROLS
+   NAV CONTROLS (separate from submit)
    ========================= */
 document.getElementById('toTop').onclick = ()=>window.scrollTo({top:0,behavior:'smooth'});
 document.getElementById('toBottom').onclick = ()=>window.scrollTo({top:document.body.scrollHeight,behavior:'smooth'});
 
-function findFirstUnansweredIndex(direction = +1) {
-    const total = questions.length;
-    const allQuestions = document.querySelectorAll('.q');
-    let currentIndex = 0;
-
-    // Find the question currently in view
-    const viewTop = window.scrollY;
-    const viewBottom = viewTop + window.innerHeight;
-    for (let i = 0; i < allQuestions.length; i++) {
-        const rect = allQuestions[i].getBoundingClientRect();
-        if (rect.top >= 0 && rect.bottom <= window.innerHeight) {
-            currentIndex = i;
-            break;
-        }
-    }
-
-    // Search for the next/previous unanswered question
-    for (let i = 1; i <= total; i++) {
-        const checkIndex = (currentIndex + i * direction + total) % total;
-        const radios = document.getElementsByName(`q${checkIndex}`);
-        let answered = false;
-        for (const radio of radios) {
-            if (radio.checked) {
-                answered = true;
-                break;
-            }
-        }
-        if (!answered) {
-            return checkIndex;
-        }
-    }
-    return -1; // All questions are answered
+function firstUnansweredIndex(step=+1){
+  const total = questions.length;
+  let start = 0;
+  // check current viewport roughly
+  const qs = [...document.querySelectorAll('.q')];
+  const mid = window.scrollY + window.innerHeight/2;
+  let near = 0;
+  qs.forEach((el,idx)=>{
+    const r = el.getBoundingClientRect();
+    const y = r.top + window.scrollY;
+    if (y < mid) near = idx;
+  });
+  start = near;
+  for(let k=1;k<=total;k++){
+    const i = ((start + step*k) % total + total) % total;
+    if(!document.querySelector(`input[name="q${i}"]:checked`)) return i;
+  }
+  return -1;
 }
-
-document.getElementById('nextUnanswered').onclick = () => {
-    const idx = findFirstUnansweredIndex(+1);
-    if (idx !== -1) {
-        document.querySelectorAll('.q')[idx].scrollIntoView({ behavior: 'smooth', block: 'center' });
-    } else {
-        alert("All questions have been answered!");
-    }
+document.getElementById('nextUnanswered').onclick = ()=>{
+  const idx = firstUnansweredIndex(+1);
+  if(idx>=0) document.querySelectorAll('.q')[idx].scrollIntoView({behavior:'smooth',block:'center'});
 };
-
-document.getElementById('prevUnanswered').onclick = () => {
-    const idx = findFirstUnansweredIndex(-1);
-    if (idx !== -1) {
-        document.querySelectorAll('.q')[idx].scrollIntoView({ behavior: 'smooth', block: 'center' });
-    } else {
-        alert("All questions have been answered!");
-    }
+document.getElementById('prevUnanswered').onclick = ()=>{
+  const idx = firstUnansweredIndex(-1);
+  if(idx>=0) document.querySelectorAll('.q')[idx].scrollIntoView({behavior:'smooth',block:'center'});
 };
 
 /* =========================
@@ -325,23 +287,14 @@ const failedListEl = document.getElementById('failedList');
 
 form.addEventListener('submit', async (e)=>{
   e.preventDefault();
-  clearInterval(timerInterval); // Stop the timer on submit
+  clearInterval(timerInterval);
 
   const name = document.getElementById('studentName').value.trim();
-  if(!name){ alert('Please enter your full name before submitting.'); return; }
+  if(!name){ alert('Please enter student name'); return; }
 
-  // Confirm before final submission, unless time ran out
-  if (timeLeft > 0) {
-      const ok = confirm('Are you sure you want to submit your answers?');
-      if(!ok) {
-        // If user cancels, restart the timer if it was running
-        // Note: This simplified version doesn't restart timer. A real-world app might.
-        return;
-      }
-  }
-
-  submitBtn.disabled = true;
-  submitBtn.textContent = 'Submitting...';
+  // Confirm before final submission
+  const ok = confirm('Are you sure you want to submit your answers?');
+  if(!ok) return;
 
   // Gather answers and score
   const formData = new FormData(form);
@@ -353,18 +306,18 @@ form.addEventListener('submit', async (e)=>{
   // Clear old highlighting
   document.querySelectorAll('.answers label').forEach(l => {
     l.classList.remove('correct','wrong');
-    const tag = l.querySelector('.tag');
-    if(tag) tag.remove();
   });
 
   for(let i=0;i<questions.length;i++){
     const given = formData.get(`q${i}`);
     const correct = questions[i].a;
 
+    // highlight selection + correct
     const labels = [...document.querySelectorAll(`input[name="q${i}"]`)].map(inp=>inp.parentElement);
     labels.forEach(lbl=>{
       const val = lbl.querySelector('input').value;
       if(val === correct){
+        addTag(lbl,'Correct');
         lbl.classList.add('correct');
       }
     });
@@ -375,13 +328,9 @@ form.addEventListener('submit', async (e)=>{
       failedNumbers.push(i+1);
       const wrongLabel = document.querySelector(`input[name="q${i}"]:checked`)?.parentElement;
       if(wrongLabel){
+        addTag(wrongLabel,'Your choice');
         wrongLabel.classList.add('wrong');
-        addTag(wrongLabel, 'Your choice');
       }
-       // Always highlight the correct answer label
-      const correctLabel = [...labels].find(lbl => lbl.querySelector('input').value === correct);
-      if(correctLabel) addTag(correctLabel, 'Correct answer');
-
       wrongs.push({
         number: i+1,
         question: questions[i].q,
@@ -389,27 +338,26 @@ form.addEventListener('submit', async (e)=>{
         correct_answer: correct
       });
     }
-    // Disable all radio buttons after scoring
-    document.querySelectorAll(`input[name="q${i}"]`).forEach(radio => radio.disabled = true);
   }
 
   // Show result to student
   result.textContent = `${name}: You scored ${score} / ${total}.`;
 
   // Show exactly which questions were failed
-  breakdown.hidden = false;
   if(wrongs.length){
+    breakdown.hidden = false;
     failedNumbersEl.textContent = `You missed these question numbers: ${failedNumbers.join(', ')}.`;
     failedListEl.innerHTML = '';
     wrongs.forEach(w=>{
       const li = document.createElement('li');
       li.innerHTML = `<strong>Q${w.number}.</strong> ${escapeHtml(w.question)}<br>
-        <em style="color: var(--bad);">Your answer:</em> ${escapeHtml(w.your_answer)}<br>
-        <em style="color: var(--ok);">Correct answer:</em> ${escapeHtml(w.correct_answer)}`;
+        <em>Your answer:</em> ${escapeHtml(w.your_answer)}<br>
+        <em>Correct answer:</em> ${escapeHtml(w.correct_answer)}`;
       failedListEl.appendChild(li);
     });
   }else{
-    failedNumbersEl.textContent = 'Perfect! You did not miss any questions.';
+    breakdown.hidden = false;
+    failedNumbersEl.textContent = 'Perfect! You did not miss any question.';
     failedListEl.innerHTML = '';
   }
 
@@ -428,69 +376,51 @@ form.addEventListener('submit', async (e)=>{
       method:'POST',
       headers: {'Content-Type':'application/json'},
       body: JSON.stringify({
-        subject: `Mathematics Quiz — ${name} — ${score}/${total}`,
+        subject: `Basic Tech Quiz — ${name} — ${score}/${total}`,
         message: `Student: ${name}\nScore: ${score}/${total}\nFailed numbers: ${payload.failed_numbers || 'None'}`,
         payload
       })
     });
     const note = document.createElement('div');
     note.className='note';
-    note.textContent = 'A summary of the questions you missed has been sent to the teacher.';
+    note.textContent = 'Only the failed questions have been sent to the teacher email.';
+    result.appendChild(document.createElement('br'));
     result.appendChild(note);
   } catch(err) {
     const warn = document.createElement('div');
     warn.className='warn';
-    warn.textContent = 'Could not send results automatically. Your score and feedback are shown above.';
+    warn.textContent = 'Could not send results to email (network/CORS). Your score and feedback are shown above.';
+    result.appendChild(document.createElement('br'));
     result.appendChild(warn);
     console.error(err);
   }
-  
-  submitBtn.textContent = 'Submitted';
 });
 
-// Add a small tag to a label
+// Add a small tag to a label ("Correct" / "Your choice")
 function addTag(label, text){
-  if(label.querySelector('.tag')) return; // Don't add if exists
+  // avoid duplicates
+  if(label.querySelector('.tag')) return;
   const span = document.createElement('span');
   span.className = 'tag';
-  span.textContent = ` (${text})`;
+  span.style.marginLeft = '6px';
+  span.textContent = `(${text})`;
   label.appendChild(span);
 }
 
-// Accessibility: jump to first unanswered on invalid submission attempt
+// Accessibility: jump to first unanswered on invalid
 form.addEventListener('invalid', function(ev){
   ev.preventDefault();
   for(let i=0;i<questions.length;i++){
-    const radios = document.getElementsByName(`q${i}`);
-    let answered = false;
-    for (const radio of radios) {
-        if (radio.checked) {
-            answered = true;
-            break;
-        }
-    }
-    if (!answered) {
-        const firstRadio = radios[0];
-        if(firstRadio) {
-          const questionDiv = firstRadio.closest('.q');
-          questionDiv.scrollIntoView({behavior:'smooth',block:'center'});
-          firstRadio.focus();
-          alert(`Please answer question ${i + 1}.`);
-        }
-        break;
+    if(!document.querySelector(`input[name="q${i}"]:checked`)){
+      const el = document.querySelector(`input[name="q${i}"]`);
+      if(el){ el.scrollIntoView({behavior:'smooth',block:'center'}); el.focus(); }
+      break;
     }
   }
 }, true);
 
-// Escape HTML helper
-function escapeHtml(s){
-  return String(s)
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#039;');
-}
+// Escape helper
+function escapeHtml(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 </script>
 </body>
 </html>
