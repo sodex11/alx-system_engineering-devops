@@ -33,18 +33,18 @@
   .answers label{display:block;cursor:pointer;padding:.35rem .5rem;border-radius:8px;border:1px solid transparent}
   .answers input{margin-right:.45rem}
   .answers label:hover{background:#f8fafc}
-  .correct{background:var(--okbg)!important;border-color:#bae6fd}
-  .correct .tag{color:var(--ok);font-weight:700}
-  .wrong{background:var(--badbg)!important;border-color:#fecaca}
-  .wrong .tag{color:var(--bad);font-weight:700}
+  .correct{background:var(--okbg)!important;border-color:#bae6fd;font-weight:600;}
+  .wrong{background:var(--badbg)!important;border-color:#fecaca;}
+  .tag{font-size: 0.85em; color: var(--muted); opacity: 0.9;}
   .submit-wrap{display:flex;gap:12px;align-items:center;margin-top:14px}
   .submit-wrap .left{display:flex;gap:8px;align-items:center}
   #result{margin-top:10px;font-weight:700}
   .summary{background:#fff;border:1px dashed #cbd5e1;border-radius:10px;padding:10px;margin-top:10px}
   .summary h5{margin:.2rem 0 .4rem}
+  .summary li { margin-bottom: 0.5rem; }
   footer{margin:2rem 0;text-align:center;color:var(--muted);font-size:.9rem}
-  .note{color:#064e3b;font-size:.9rem}
-  .warn{color:#7f1d1d;font-size:.9rem}
+  .note{color:#064e3b;font-size:.9rem; margin-top: 4px;}
+  .warn{color:#7f1d1d;font-size:.9rem; margin-top: 4px;}
   @media(max-width:700px){.nav-row{flex-direction:column;align-items:stretch}.nav-row .pager{justify-content:space-between}}
 </style>
 </head>
@@ -100,7 +100,6 @@
 /* =========================
    QUIZ DATA (100 MCQs)
    ========================= */
-
 const questions = [
   // ----- Chapter 2: Transformations (1–50) -----
   { q: "The graph of y = f(x) + 3 is obtained from y = f(x) by", opts: ["left 3","right 3","up 3","down 3"], a: "up 3" },
@@ -153,8 +152,6 @@ const questions = [
   { q: "The effect of y = f(x + 7) is a shift", opts: ["right 7","left 7","up 7","down 7"], a: "left 7" },
   { q: "If f(x) is one-to-one and continuous, then its inverse is obtained by", opts: ["rotating 90°","reflecting in y = x","reflecting in y-axis","translating up"], a: "reflecting in y = x" },
   { q: "The parent of y = -3|x + 2| + 5 is", opts: ["y = x","y = x^2","y = |x|","y = sqrt(x)"], a: "y = |x|" },
-
-  // ----- Chapter 3: Polynomial Functions (51–100) -----
   { q: "The degree of p(x) = 3x^5 - 7x^2 + 1 is", opts: ["2","3","4","5"], a: "5" },
   { q: "The leading coefficient of -2x^4 + 5x is", opts: ["-2","5","4","1"], a: "-2" },
   { q: "End behaviour of y = -x^6 + 3x is", opts: ["up left, up right","down left, down right","up left, down right","down left, up right"], a: "down left, down right" },
@@ -208,144 +205,292 @@ const questions = [
 ];
 
 /* =========================
-   DOM BUILD & LOGIC
+   DOM BUILD
    ========================= */
 const container = document.getElementById('questionsContainer');
-const form = document.getElementById('quizForm');
-const resultDisplay = document.getElementById('result');
-const breakdown = document.getElementById('breakdown');
-const failedList = document.getElementById('failedList');
-const failedNumbers = document.getElementById('failedNumbers');
-const submitBtn = document.getElementById('submitBtn');
 
-// Function to shuffle choices for each question
-function shuffle(array) {
-  for (let i = array.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [array[i], array[j]] = [array[j], array[i]];
-  }
-}
-
-// Generate the quiz questions and answers in the DOM
 questions.forEach((Q, i) => {
   const number = i + 1;
   const div = document.createElement('div');
   div.className = 'q';
-  div.id = `q-${number}`;
-
   const h = document.createElement('h4');
   h.textContent = `${number}. ${Q.q}`;
   div.appendChild(h);
 
   const ans = document.createElement('div');
   ans.className = 'answers';
-
-  const shuffledOpts = [...Q.opts];
-  shuffle(shuffledOpts); // Shuffle the options
-
-  shuffledOpts.forEach(opt => {
-    const label = document.createElement('label');
+  Q.opts.forEach(opt => {
+    const id = `q${i}-${sanitizeId(opt)}`;
+    const lbl = document.createElement('label');
+    lbl.setAttribute('for', id);
     const radio = document.createElement('input');
-    radio.type = 'radio';
-    radio.name = `q${number}`;
-    radio.value = opt;
-    radio.required = true;
-
-    label.appendChild(radio);
-    label.appendChild(document.createTextNode(opt));
-    ans.appendChild(label);
+    radio.type='radio'; radio.name=`q${i}`; radio.value=opt; radio.id=id; radio.required=true;
+    lbl.appendChild(radio);
+    lbl.appendChild(document.createTextNode(' ' + opt));
+    ans.appendChild(lbl);
   });
-
   div.appendChild(ans);
   container.appendChild(div);
 });
 
-// Event listener for form submission
-form.addEventListener('submit', function(event) {
-  event.preventDefault();
+function sanitizeId(s){ return s.replace(/[^a-z0-9]+/gi,'-'); }
 
-  let score = 0;
-  const incorrect = [];
+/* =========================
+   TIMER (90 minutes)
+   ========================= */
+let timeLeft = 90 * 60; // seconds
+const timerEl = document.getElementById('timer');
+const submitBtn = document.getElementById('submitBtn');
 
-  questions.forEach((Q, i) => {
-    const number = i + 1;
-    const selected = form.querySelector(`input[name="q${number}"]:checked`);
-    const labels = form.querySelectorAll(`#q-${number} .answers label`);
-    
-    // Disable inputs after submission
-    form.querySelectorAll(`input[name="q${number}"]`).forEach(inp => inp.disabled = true);
+const timerInterval = setInterval(()=>{
+  if(timeLeft <= 0){
+    clearInterval(timerInterval);
+    timerEl.textContent = 'Time left: 00:00';
+    alert("Time is up! Your answers will be submitted automatically.");
+    submitBtn.click(); // Trigger form submission
+    return;
+  }
+  const m = Math.floor(timeLeft/60).toString().padStart(2,'0');
+  const s = (timeLeft%60).toString().padStart(2,'0');
+  timerEl.textContent = `Time left: ${m}:${s}`;
+  timeLeft--;
+}, 1000);
 
-    if (selected) {
-      const parentLabel = selected.parentElement;
-      if (selected.value === Q.a) {
-        score++;
-        parentLabel.classList.add('correct');
-        parentLabel.innerHTML += ` <span class="tag">✓ Correct</span>`;
-      } else {
-        parentLabel.classList.add('wrong');
-        parentLabel.innerHTML += ` <span class="tag">✗ Wrong</span>`;
-        incorrect.push({ number, q: Q.q, a: Q.a, selected: selected.value });
+/* =========================
+   NAV CONTROLS
+   ========================= */
+document.getElementById('toTop').onclick = ()=>window.scrollTo({top:0,behavior:'smooth'});
+document.getElementById('toBottom').onclick = ()=>window.scrollTo({top:document.body.scrollHeight,behavior:'smooth'});
 
-        // Highlight the correct answer
-        labels.forEach(label => {
-          if (label.querySelector('input').value === Q.a) {
-            label.classList.add('correct');
-          }
-        });
-      }
+function findFirstUnansweredIndex(direction = +1) {
+    const total = questions.length;
+    const allQuestions = document.querySelectorAll('.q');
+    let currentIndex = 0;
+
+    // Find the question currently in view
+    const viewTop = window.scrollY;
+    const viewBottom = viewTop + window.innerHeight;
+    for (let i = 0; i < allQuestions.length; i++) {
+        const rect = allQuestions[i].getBoundingClientRect();
+        if (rect.top >= 0 && rect.bottom <= window.innerHeight) {
+            currentIndex = i;
+            break;
+        }
     }
-  });
 
-  resultDisplay.textContent = `Score: ${score} out of ${questions.length} (${((score / questions.length) * 100).toFixed(1)}%)`;
-  submitBtn.disabled = true;
-
-  if (incorrect.length > 0) {
-    breakdown.hidden = false;
-    failedNumbers.textContent = `You missed ${incorrect.length} question(s):`;
-    failedList.innerHTML = incorrect.map(item => `<li><strong>Q${item.number}:</strong> ${item.q}<br><span class="note">Correct answer: ${item.a}</span><br><span class="warn">Your answer: ${item.selected}</span></li>`).join('');
-  } else {
-    breakdown.hidden = true;
-  }
-
-  // Auto-scroll to results
-  resultDisplay.scrollIntoView({ behavior: 'smooth' });
-});
-
-// Navigation button logic
-document.getElementById('toTop').addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
-document.getElementById('toBottom').addEventListener('click', () => document.body.scrollHeight && window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' }));
-
-function findNextUnanswered(direction) {
-  const allRadios = Array.from(document.querySelectorAll('input[type="radio"]'));
-  const answeredNames = new Set();
-  allRadios.forEach(radio => {
-    if (radio.checked) answeredNames.add(radio.name);
-  });
-  
-  const allQuestionDivs = Array.from(document.querySelectorAll('.q'));
-  const unansweredDivs = allQuestionDivs.filter(div => !answeredNames.has(`q${parseInt(div.id.split('-')[1])}`));
-
-  if (unansweredDivs.length === 0) return;
-
-  const currentY = window.scrollY;
-  let target;
-
-  if (direction === 'next') {
-    target = unansweredDivs.find(div => div.offsetTop > currentY + 10);
-    if (!target) target = unansweredDivs[0]; // Wrap around
-  } else { // 'prev'
-    target = unansweredDivs.reverse().find(div => div.offsetTop < currentY - 10);
-    if (!target) target = unansweredDivs[0]; // Wrap around
-  }
-  
-  if (target) {
-    target.scrollIntoView({ behavior: 'smooth', block: 'center' });
-  }
+    // Search for the next/previous unanswered question
+    for (let i = 1; i <= total; i++) {
+        const checkIndex = (currentIndex + i * direction + total) % total;
+        const radios = document.getElementsByName(`q${checkIndex}`);
+        let answered = false;
+        for (const radio of radios) {
+            if (radio.checked) {
+                answered = true;
+                break;
+            }
+        }
+        if (!answered) {
+            return checkIndex;
+        }
+    }
+    return -1; // All questions are answered
 }
 
-document.getElementById('nextUnanswered').addEventListener('click', () => findNextUnanswered('next'));
-document.getElementById('prevUnanswered').addEventListener('click', () => findNextUnanswered('prev'));
+document.getElementById('nextUnanswered').onclick = () => {
+    const idx = findFirstUnansweredIndex(+1);
+    if (idx !== -1) {
+        document.querySelectorAll('.q')[idx].scrollIntoView({ behavior: 'smooth', block: 'center' });
+    } else {
+        alert("All questions have been answered!");
+    }
+};
 
+document.getElementById('prevUnanswered').onclick = () => {
+    const idx = findFirstUnansweredIndex(-1);
+    if (idx !== -1) {
+        document.querySelectorAll('.q')[idx].scrollIntoView({ behavior: 'smooth', block: 'center' });
+    } else {
+        alert("All questions have been answered!");
+    }
+};
+
+/* =========================
+   SUBMIT / SCORE / HIGHLIGHT / SEND WRONGS
+   ========================= */
+const form = document.getElementById('quizForm');
+const result = document.getElementById('result');
+const breakdown = document.getElementById('breakdown');
+const failedNumbersEl = document.getElementById('failedNumbers');
+const failedListEl = document.getElementById('failedList');
+
+form.addEventListener('submit', async (e)=>{
+  e.preventDefault();
+  clearInterval(timerInterval); // Stop the timer on submit
+
+  const name = document.getElementById('studentName').value.trim();
+  if(!name){ alert('Please enter your full name before submitting.'); return; }
+
+  // Confirm before final submission, unless time ran out
+  if (timeLeft > 0) {
+      const ok = confirm('Are you sure you want to submit your answers?');
+      if(!ok) {
+        // If user cancels, restart the timer if it was running
+        // Note: This simplified version doesn't restart timer. A real-world app might.
+        return;
+      }
+  }
+
+  submitBtn.disabled = true;
+  submitBtn.textContent = 'Submitting...';
+
+  // Gather answers and score
+  const formData = new FormData(form);
+  let score = 0;
+  const total = questions.length;
+  const wrongs = []; // for sending
+  const failedNumbers = [];
+
+  // Clear old highlighting
+  document.querySelectorAll('.answers label').forEach(l => {
+    l.classList.remove('correct','wrong');
+    const tag = l.querySelector('.tag');
+    if(tag) tag.remove();
+  });
+
+  for(let i=0;i<questions.length;i++){
+    const given = formData.get(`q${i}`);
+    const correct = questions[i].a;
+
+    const labels = [...document.querySelectorAll(`input[name="q${i}"]`)].map(inp=>inp.parentElement);
+    labels.forEach(lbl=>{
+      const val = lbl.querySelector('input').value;
+      if(val === correct){
+        lbl.classList.add('correct');
+      }
+    });
+
+    if(given === correct){
+      score++;
+    }else{
+      failedNumbers.push(i+1);
+      const wrongLabel = document.querySelector(`input[name="q${i}"]:checked`)?.parentElement;
+      if(wrongLabel){
+        wrongLabel.classList.add('wrong');
+        addTag(wrongLabel, 'Your choice');
+      }
+       // Always highlight the correct answer label
+      const correctLabel = [...labels].find(lbl => lbl.querySelector('input').value === correct);
+      if(correctLabel) addTag(correctLabel, 'Correct answer');
+
+      wrongs.push({
+        number: i+1,
+        question: questions[i].q,
+        your_answer: given ?? "(no answer)",
+        correct_answer: correct
+      });
+    }
+    // Disable all radio buttons after scoring
+    document.querySelectorAll(`input[name="q${i}"]`).forEach(radio => radio.disabled = true);
+  }
+
+  // Show result to student
+  result.textContent = `${name}: You scored ${score} / ${total}.`;
+
+  // Show exactly which questions were failed
+  breakdown.hidden = false;
+  if(wrongs.length){
+    failedNumbersEl.textContent = `You missed these question numbers: ${failedNumbers.join(', ')}.`;
+    failedListEl.innerHTML = '';
+    wrongs.forEach(w=>{
+      const li = document.createElement('li');
+      li.innerHTML = `<strong>Q${w.number}.</strong> ${escapeHtml(w.question)}<br>
+        <em style="color: var(--bad);">Your answer:</em> ${escapeHtml(w.your_answer)}<br>
+        <em style="color: var(--ok);">Correct answer:</em> ${escapeHtml(w.correct_answer)}`;
+      failedListEl.appendChild(li);
+    });
+  }else{
+    failedNumbersEl.textContent = 'Perfect! You did not miss any questions.';
+    failedListEl.innerHTML = '';
+  }
+
+  // Prepare payload: only wrong answers + summary
+  const payload = {
+    student_name: name,
+    score: `${score}/${total}`,
+    failed_numbers: failedNumbers.join(', '),
+    wrong_count: wrongs.length,
+    wrongs // only failed questions with correct answers
+  };
+
+  // Send to Formspree (teacher email)
+  try {
+    await fetch('https://formspree.io/f/mvgqwywl', {
+      method:'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({
+        subject: `Mathematics Quiz — ${name} — ${score}/${total}`,
+        message: `Student: ${name}\nScore: ${score}/${total}\nFailed numbers: ${payload.failed_numbers || 'None'}`,
+        payload
+      })
+    });
+    const note = document.createElement('div');
+    note.className='note';
+    note.textContent = 'A summary of the questions you missed has been sent to the teacher.';
+    result.appendChild(note);
+  } catch(err) {
+    const warn = document.createElement('div');
+    warn.className='warn';
+    warn.textContent = 'Could not send results automatically. Your score and feedback are shown above.';
+    result.appendChild(warn);
+    console.error(err);
+  }
+  
+  submitBtn.textContent = 'Submitted';
+});
+
+// Add a small tag to a label
+function addTag(label, text){
+  if(label.querySelector('.tag')) return; // Don't add if exists
+  const span = document.createElement('span');
+  span.className = 'tag';
+  span.textContent = ` (${text})`;
+  label.appendChild(span);
+}
+
+// Accessibility: jump to first unanswered on invalid submission attempt
+form.addEventListener('invalid', function(ev){
+  ev.preventDefault();
+  for(let i=0;i<questions.length;i++){
+    const radios = document.getElementsByName(`q${i}`);
+    let answered = false;
+    for (const radio of radios) {
+        if (radio.checked) {
+            answered = true;
+            break;
+        }
+    }
+    if (!answered) {
+        const firstRadio = radios[0];
+        if(firstRadio) {
+          const questionDiv = firstRadio.closest('.q');
+          questionDiv.scrollIntoView({behavior:'smooth',block:'center'});
+          firstRadio.focus();
+          alert(`Please answer question ${i + 1}.`);
+        }
+        break;
+    }
+  }
+}, true);
+
+// Escape HTML helper
+function escapeHtml(s){
+  return String(s)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
 </script>
 </body>
 </html>
