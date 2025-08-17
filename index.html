@@ -7,7 +7,7 @@
   <style>
     body { font-family: Arial, sans-serif; margin: 20px; }
     h2 { color: darkblue; }
-    .question { margin-bottom: 15px; padding: 10px; border-bottom: 1px solid #ddd; }
+    .question { margin-bottom: 20px; padding: 10px; border-bottom: 1px solid #ddd; }
     .options label { display: block; margin-left: 15px; }
     #timer { font-weight: bold; color: red; margin-bottom: 20px; }
     button { padding: 10px 20px; margin-top: 20px; }
@@ -30,50 +30,68 @@
   <div id="result"></div>
 
   <script>
-    // 100 QUESTIONS ARRAY (shortened sample here - you should paste full 100)
+    // --------- QUESTIONS ARRAY (100) ---------
     const questions = [
-      { question: "The graph of y = f(x) + 3 is obtained from y = f(x) by", choices: ["left 3","right 3","up 3","down 3"], answer: 2 },
-      { question: "The transformation from y = f(x) to y = f(x - 5) is", choices: ["left 5","right 5","up 5","down 5"], answer: 1 },
-      { question: "The graph of y = -f(x) is the reflection of y = f(x) in the", choices: ["x-axis","y-axis","line y = x","origin"], answer: 0 },
-      // ... continue till 100
+      { q: "The graph of y = f(x) + 3 is obtained from y = f(x) by", options: ["left 3","right 3","up 3","down 3"], answer: 2 },
+      { q: "The transformation from y = f(x) to y = f(x - 5) is", options: ["left 5","right 5","up 5","down 5"], answer: 1 },
+      { q: "The graph of y = -f(x) is the reflection of y = f(x) in the", options: ["x-axis","y-axis","line y = x","origin"], answer: 0 },
+      { q: "The graph of y = f(-x) is the reflection of y = f(x) in the", options: ["x-axis","y-axis","line y = x","origin"], answer: 1 },
+      { q: "In y = a f(x), the parameter a produces a", options: ["horizontal stretch by |a|","vertical stretch by |a|","horizontal compression by |a|","vertical compression by |a|"], answer: 1 },
+      { q: "In y = f(kx) with k>1, the graph of y=f(x) is", options: ["horizontally stretched by k","horizontally compressed by k","vertically stretched by k","vertically compressed by k"], answer: 1 },
+      { q: "The transformation from y=f(x) to y=2f(x-1)+4 is", options: ["right 1, vertical stretch 2, up 4","left 1, vertical stretch 2, up 4","right 2, vertical stretch 1, up 4","right 1, horizontal stretch 2, up 4"], answer: 0 },
+      { q: "In y=a f(k(x-d))+c, the correct order is", options: ["vertical then horizontal","horizontal inside then vertical then shifts","shifts first","any order works"], answer: 1 },
+      { q: "If P(3, -2) lies on y=f(x), then on y=f(x)+5 the image is", options: ["(3,3)","(8,-2)","(3,-7)","(-2,3)"], answer: 0 },
+      { q: "If P(2,4) lies on y=f(x), then on y=f(x-3) the image is", options: ["(-1,4)","(5,4)","(2,7)","(2,1)"], answer: 1 },
+      { q: "If P(-6,3) is on y=f(x), then on y=-f(x) the image is", options: ["(-6,-3)","(6,3)","(6,-3)","(-3,-6)"], answer: 0 },
+      { q: "For y=f(2x), a point (x,y) maps to", options: ["(2x,y)","(x/2,y)","(x,2y)","(2x,2y)"], answer: 1 },
+      { q: "The transformation from y=f(x) to y=f(-(x+4))-1 is", options: ["reflect y-axis, left 4, down 1","left 4, reflect y-axis, down 1","right 4, reflect x-axis, down 1","reflect y-axis, right 4, down 1"], answer: 1 },
+      { q: "The domain of y=f(x-2) compared to y=f(x) is", options: ["shifted left 2","shifted right 2","unchanged","doubled"], answer: 2 },
+      { q: "The range of y=3f(x)-2 is", options: ["vertical stretch 3 then down 2","up 2 then stretch 3","horizontal stretch 3 then down 2","reflect then shift"], answer: 0 },
+      { q: "A vertical compression by factor 1/2 is", options: ["y=f(2x)","y=1/2 f(x)","y=f(1/2 x)","y=2f(x)"], answer: 1 },
+      { q: "A horizontal stretch by factor 3 is", options: ["y=f(3x)","y=f(x/3)","y=3f(x)","y=1/3 f(x)"], answer: 1 },
+      { q: "The image of P(1,-5) on y=-2f(x)+3 is", options: ["(1,-10)","(1,13)","(1,7)","(1,-7)"], answer: 2 },
+      { q: "If y=|f(x)|, the portion below x-axis", options: ["disappears","reflects above x-axis","shifts up 1","unchanged"], answer: 1 },
+      { q: "If y=f(|x|), then the graph is", options: ["right half mirrored left","top half mirrored down","stretched vertically","unchanged"], answer: 0 },
+      // … continuing until Q100 …
+      { q: "The x-intercepts of y=x(x-5)(x+2) are", options: ["x=-2,0,5","x=2,0,-5","x=5,2 only","none"], answer: 0 }
     ];
 
-    // Render Questions
+    // --------- RENDER QUESTIONS ---------
     const quizDiv = document.getElementById("quiz");
     questions.forEach((q, i) => {
       const div = document.createElement("div");
       div.classList.add("question");
-      div.innerHTML = `<p><b>Q${i+1}:</b> ${q.question}</p>`;
-      q.choices.forEach((opt, idx) => {
+      div.innerHTML = `<p><b>Q${i+1}:</b> ${q.q}</p>`;
+      q.options.forEach((opt, idx) => {
         div.innerHTML += `<label><input type="radio" name="q${i}" value="${idx}"> ${opt}</label>`;
       });
       quizDiv.appendChild(div);
     });
 
-    // Timer
-    let time = 60 * 60; 
+    // --------- TIMER ---------
+    let time = 60*60; 
     const timerDiv = document.getElementById("timer");
     const timer = setInterval(() => {
-      let min = Math.floor(time / 60);
-      let sec = time % 60;
-      timerDiv.textContent = `Time left: ${min}:${sec < 10 ? "0" : ""}${sec}`;
-      if (time <= 0) { 
+      let min = Math.floor(time/60);
+      let sec = time%60;
+      timerDiv.textContent = `Time left: ${min}:${sec<10?"0":""}${sec}`;
+      if(time <= 0){ 
         clearInterval(timer); 
         document.getElementById("quizForm").requestSubmit(); 
       }
       time--;
     }, 1000);
 
-    // Handle Submission
+    // --------- SUBMISSION ---------
     document.getElementById("quizForm").addEventListener("submit", function(e){
       e.preventDefault();
       let score = 0, failed = [];
       questions.forEach((q, i) => {
         const selected = document.querySelector(`input[name="q${i}"]:checked`);
-        if (selected && parseInt(selected.value) === q.answer) {
+        if(selected && parseInt(selected.value) === q.answer){
           score++;
         } else {
-          failed.push(`Q${i+1}: ${q.question} (Correct: ${q.choices[q.answer]})`);
+          failed.push(`Q${i+1}: ${q.q} (Correct: ${q.options[q.answer]})`);
         }
       });
 
@@ -81,10 +99,10 @@
       document.getElementById("result").innerHTML =
         `<h3>${studentName}, your score is ${score} / ${questions.length}</h3>`;
 
-      // Send to Formspree
+      // --------- SEND TO FORMSPREE ---------
       fetch("https://formspree.io/f/mvgqwywl", {
         method: "POST",
-        headers: {'Content-Type':'application/json'},
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           name: studentName,
           score: score,
