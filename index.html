@@ -1,115 +1,526 @@
-<!DOCTYPE html>
+I want you to create a question for me in this format in the html
+const questions = [
+  // ----- Chapter 2: Transformations (1–50) -----
+  { question: "The graph of y = f(x) + 3 is obtained from y = f(x) by", choices: ["left 3","right 3","up 3","down 3"], answer: "up 3" },
+  { question: "The transformation from y = f(x) to y = f(x - 5) is", choices: ["left 5","right 5","up 5","down 5"], answer: "right 5" },
+  { question: "The graph of y = -f(x) is the reflection of y = f(x) in the", choices: ["x-axis","y-axis","line y = x","origin"], answer: "x-axis" },
+  { question: "The graph of y = f(-x) is the reflection of y = f(x) in the", choices: ["x-axis","y-axis","line y = x","origin"], answer: "y-axis" },
+  { question: "In y = a f(x), the parameter a produces a", choices: ["horizontal stretch by |a|","vertical stretch by |a|","horizontal compression by |a|","vertical compression by |a|"], answer: "vertical stretch by |a|" },
+  { question: "In y = f(kx) with k > 1, the graph of y = f(x) is", choices: ["horizontally stretched by factor k","horizontally compressed by factor k","vertically stretched by k","vertically compressed by k"], answer: "horizontally compressed by factor k" },
+  { question: "The transformation from y = f(x) to y = 2f(x - 1) + 4 is", choices: ["right 1, vertical stretch 2, up 4","left 1, vertical stretch 2, up 4","right 2, vertical stretch 1, up 4","right 1, horizontal stretch 2, up 4"], answer: "right 1, vertical stretch 2, up 4" },
+  { question: "The order that usually guarantees correct mapping in y = a f(k(x - d)) + c is", choices: ["vertical, then horizontal, then shifts","horizontal (inside), then vertical (outside), then shifts","shifts first","any order produces same points"], answer: "horizontal (inside), then vertical (outside), then shifts" },
+  { question: "If P(3, -2) lies on y = f(x), then on y = f(x) + 5 the image point is", choices: ["(3, 3)","(8, -2)","(3, -7)","(-2, 3)"], answer: "(3, 3)" },
+  { question: "If P(2, 4) lies on y = f(x), then on y = f(x - 3) the image point is", choices: ["(-1, 4)","(5, 4)","(2, 7)","(2, 1)"], answer: "(5, 4)" },
+  { question: "If P(-6, 3) is on y = f(x), then on y = -f(x) the image point is", choices: ["(-6, -3)","(6, 3)","(6, -3)","(-3, -6)"], answer: "(-6, -3)" },
+  { question: "For y = f(2x), a point (x, y) on y = f(x) maps to", choices: ["(2x, y)","(x/2, y)","(x, 2y)","(2x, 2y)"], answer: "(x/2, y)" },
+  { question: "The transformation from y = f(x) to y = f(-(x + 4)) - 1 is", choices: ["reflect in y-axis, left 4, down 1","left 4, reflect in y-axis, down 1","right 4, reflect in x-axis, down 1","reflect in y-axis, right 4, down 1"], answer: "left 4, reflect in y-axis, down 1" },
+  { question: "The domain of y = f(x - 2) compared to y = f(x) is", choices: ["shifted left by 2","shifted right by 2","unchanged","doubled"], answer: "unchanged" },
+  { question: "The range of y = 3f(x) - 2 is obtained by", choices: ["vertical stretch by 3, then down 2","up 2, then stretch by 3","horizontal stretch by 3, then down 2","reflect, then shift"], answer: "vertical stretch by 3, then down 2" },
+  { question: "A vertical compression by factor 1/2 is given by", choices: ["y = f(2x)","y = 1/2 f(x)","y = f(1/2 x)","y = 2f(x)"], answer: "y = 1/2 f(x)" },
+  { question: "A horizontal stretch by factor 3 is given by", choices: ["y = f(3x)","y = f(x/3)","y = 3f(x)","y = 1/3 f(x)"], answer: "y = f(x/3)" },
+  { question: "The image of P(1, -5) on y = -2f(x) + 3 is", choices: ["(1, -10)","(1, 13)","(1, 7)","(1, -7)"], answer: "(1, 13)" },
+  { question: "If y = |f(x)|, the portion of y = f(x) below the x-axis", choices: ["disappears","reflects above the x-axis","shifts up 1","remains unchanged"], answer: "reflects above the x-axis" },
+  { question: "If y = f(|x|), then the graph is", choices: ["the right half of y = f(x) mirrored to the left","the top half mirrored down","stretched vertically","unchanged"], answer: "the right half of y = f(x) mirrored to the left" },
+  { question: "The graph of y = f(x) - 6 is", choices: ["left 6","right 6","up 6","down 6"], answer: "down 6" },
+  { question: "The mapping rule for y = -f( (1/2)(x + 4) ) is", choices: ["left 4, horizontal stretch 2, reflect in x-axis","right 4, horizontal stretch 2, reflect in x-axis","left 4, horizontal compression 2, reflect in y-axis","right 4, vertical stretch 2, reflect in x-axis"], answer: "left 4, horizontal stretch 2, reflect in x-axis" },
+  { question: "If f(x) has domain [0, ∞), the domain of f(x - 5) is", choices: ["[0, ∞)","[5, ∞)","(-∞, 0]","(-∞, -5]"], answer: "[5, ∞)" },
+  { question: "For g(x) = 2f(-3x) + 1, the inside factor causes a", choices: ["horizontal stretch by 3","horizontal compression by 3","vertical stretch 2","vertical shift 1"], answer: "horizontal compression by 3" },
+  { question: "The inverse of a function (when it exists) reflects the graph of the function in", choices: ["x-axis","y-axis","line y = x","origin"], answer: "line y = x" },
+  { question: "A function has an inverse that is also a function if it is", choices: ["even","odd","one-to-one","periodic"], answer: "one-to-one" },
+  { question: "The effect of y = f(x) + c on range is", choices: ["shift up c","compress by c","reflect","no change"], answer: "shift up c" },
+  { question: "The effect of y = f(x - d) on domain is", choices: ["shift right d","shift left d","no change","reflect"], answer: "shift right d" },
+  { question: "For y = a f(x) + c with a < 0, the graph is", choices: ["reflected in y-axis","reflected in x-axis then shifted up/down","rotated 90°","unchanged"], answer: "reflected in x-axis then shifted up/down" },
+  { question: "If f(x) = sqrt(x), then y = f(x - 4) + 2 has domain", choices: ["(-∞, ∞)","[4, ∞)","[2, ∞)","(-∞, 4]"], answer: "[4, ∞)" },
+  { question: "The image of P(0, 7) on y = f(2x) - 3 is", choices: ["(0, 7)","(0, 4)","(0, -10)","(0, -3)"], answer: "(0, 4)" },
+  { question: "A vertical stretch by factor 4 followed by down 1 is", choices: ["y = f(4x) - 1","y = 4f(x) - 1","y = f(x) - 1","y = 1/4 f(x) - 1"], answer: "y = 4f(x) - 1" },
+  { question: "If f is odd, then f(-x) equals", choices: ["f(x)","-f(x)","f(|x|)","|f(x)|"], answer: "-f(x)" },
+  { question: "If f is even, then its graph is symmetric about the", choices: ["x-axis","y-axis","origin","line y = x"], answer: "y-axis" },
+  { question: "The composite f(g(x)) applies", choices: ["f then g","g then f","both at once","neither"], answer: "g then f" },
+  { question: "The x-intercepts of y = |x - 3| are", choices: ["x = 3 only","x = 0, 3","x = -3, 3","none"], answer: "x = 3 only" },
+  { question: "The minimum of y = (x - 4)^2 + 5 occurs at", choices: ["(4, 5)","(-4, 5)","(5, 4)","(0, 5)"], answer: "(4, 5)" },
+  { question: "The transformation from y = x^2 to y = - (x + 1)^2 + 2 is", choices: ["right 1, reflect x-axis, up 2","left 1, reflect x-axis, up 2","left 1, reflect y-axis, up 2","right 1, reflect y-axis, up 2"], answer: "left 1, reflect x-axis, up 2" },
+  { question: "The graph of y = sqrt(4 - (x - 1)^2) is a", choices: ["line","semicircle","parabola","hyperbola"], answer: "semicircle" },
+  { question: "The domain of y = sqrt(9 - (x + 2)^2) is", choices: ["|x + 2| <= 3","|x + 2| >= 3","all real x","x >= -2"], answer: "|x + 2| <= 3" },
+  { question: "The range of y = 2|x| - 3 is", choices: ["y <= -3","y >= -3","y >= 3","all real y"], answer: "y >= -3" },
+  { question: "For y = (1/2) f(-x) + 4, the sequence is", choices: ["reflect in y-axis, vertical compress by 2, up 4","compress, then reflect, up 4","up 4, then reflect","reflect in x-axis, up 4"], answer: "reflect in y-axis, vertical compress by 2, up 4" },
+  { question: "If f(x) = |x|, then f(x - 5) has vertex at", choices: ["(0, 0)","(5, 0)","(0, 5)","(-5, 0)"], answer: "(5, 0)" },
+  { question: "The inverse of y = 2x - 3 is", choices: ["y = (x + 3)/2","y = 2(x + 3)","y = (x - 3)/2","y = 2x + 3"], answer: "y = (x + 3)/2" },
+  { question: "The function y = sqrt(x - 1) shifted left 3 and down 2 is", choices: ["y = sqrt(x - 4) - 2","y = sqrt(x + 3) - 2","y = sqrt(x + 3) + 2","y = sqrt(x - 1) - 2"], answer: "y = sqrt(x + 3) - 2" },
+  { question: "A horizontal compression by factor 1/2 is", choices: ["y = f(2x)","y = f(x/2)","y = 2f(x)","y = 1/2 f(x)"], answer: "y = f(2x)" },
+  { question: "If y = f(x) passes through (-2, 5), then y = 3f(x) + 1 passes through", choices: ["(-2, 16)","(-2, 6)","(-2, 14)","(-2, -14)"], answer: "(-2, 16)" },
+  { question: "The effect of y = f(x + 7) is a shift", choices: ["right 7","left 7","up 7","down 7"], answer: "left 7" },
+  { question: "If f(x) is one-to-one and continuous, then its inverse is obtained by", choices: ["rotating 90°","reflecting in y = x","reflecting in y-axis","translating up"], answer: "reflecting in y = x" },
+  { question: "The parent of y = -3|x + 2| + 5 is", choices: ["y = x","y = x^2","y = |x|","y = sqrt(x)"], answer: "y = |x|" },
+
+  // ----- Chapter 3: Polynomial Functions (51–100) -----
+  { question: "The degree of p(x) = 3x^5 - 7x^2 + 1 is", choices: ["2","3","4","5"], answer: "5" },
+  { question: "The leading coefficient of -2x^4 + 5x is", choices: ["-2","5","4","1"], answer: "-2" },
+  { question: "End behaviour of y = -x^6 + 3x is", choices: ["up left, up right","down left, down right","up left, down right","down left, up right"], answer: "down left, down right" },
+  { question: "A zero of multiplicity 3 at x = 2 means the graph", choices: ["crosses and flattens at x = 2","touches and turns","has an asymptote","is undefined"], answer: "crosses and flattens at x = 2" },
+  { question: "The y-intercept of y = 2x^3 - x^2 + 4 is", choices: ["-1","0","2","4"], answer: "4" },
+  { question: "If x = a is a zero, then (x - a) is", choices: ["a factor","a divisor remainder 1","not related","a constant"], answer: "a factor" },
+  { question: "The Factor Theorem says x - k is a factor iff", choices: ["p(k) = 1","p(k) = 0","p'(k) = 0","p(k) = k"], answer: "p(k) = 0" },
+  { question: "The Remainder Theorem: dividing p(x) by x - k leaves remainder", choices: ["p'(k)","k","p(k)","0"], answer: "p(k)" },
+  { question: "A quartic with positive leading coefficient has end behaviour", choices: ["up, up","down, down","up, down","down, up"], answer: "up, up" },
+  { question: "The graph of y = (x + 1)^2 (x - 3) has how many distinct real zeros?", choices: ["0","1","2","3"], answer: "2" },
+  { question: "Multiplicity 2 at a zero means the graph", choices: ["crosses","touches and turns","has a hole","has an asymptote"], answer: "touches and turns" },
+  { question: "Synthetic division is a shortcut for dividing by", choices: ["any quadratic","x - k","ax^2 + b","x^2 + k"], answer: "x - k" },
+  { question: "If p(x) has degree 5, then p'(x) has degree", choices: ["6","4","5","3"], answer: "4" },
+  { question: "The number of turning points of a degree-n polynomial is at most", choices: ["n","n - 1","n + 1","2n"], answer: "n - 1" },
+  { question: "If p(x) = (x - 2)(x + 1)^2, then the multiplicity at x = -1 is", choices: ["1","2","3","0"], answer: "2" },
+  { question: "A polynomial function is continuous and differentiable", choices: ["nowhere","at only integers","everywhere on R","except at zeros"], answer: "everywhere on R" },
+  { question: "The real zeros of x^3 - 4x are", choices: ["-4, 0","-2, 2","-sqrt(4), sqrt(4)","-2, 0, 2"], answer: "-2, 0, 2" },
+  { question: "The x-intercepts of y = (x - 1)^2 (x + 3) are", choices: ["x = 1, -3","x = 1 only","x = -3 only","none"], answer: "x = 1, -3" },
+  { question: "If p(2) = 0 and x = 2 is a triple zero, then near x = 2 the graph", choices: ["touches and turns","crosses with flattening","vertical asymptote","hole"], answer: "crosses with flattening" },
+  { question: "The leading term of p(x) = (2x - 1)(-x^2) is", choices: ["-2x^3","2x^3","x^2","-x^2"], answer: "-2x^3" },
+  { question: "To find a polynomial from its zeros x = -1, 2, 2, a minimal form is", choices: ["(x + 1)(x - 2)","(x + 1)(x - 2)^2","(x - 1)(x - 2)^2","(x + 1)^2 (x - 2)"], answer: "(x + 1)(x - 2)^2" },
+  { question: "If the remainder of p(x) ÷ (x - 4) is 7, then p(4) =", choices: ["0","4","7","11"], answer: "7" },
+  { question: "For y = -3(x + 2)^4 + 5, the vertex is", choices: ["(-2, 5)","(2, 5)","(-2, -5)","(0, 5)"], answer: "(-2, 5)" },
+  { question: "The graph of an odd-degree polynomial with negative leading coefficient goes", choices: ["up left, up right","down left, down right","up left, down right","down left, up right"], answer: "down left, up right" },
+  { question: "If p(x) = x^4 - 5x^2 + 4, then zeros include", choices: ["±1, ±2","±4 only","±sqrt(5)","none real"], answer: "±1, ±2" },
+  { question: "The sum of multiplicities of all zeros equals the", choices: ["constant term","degree","leading coefficient","number of factors"], answer: "degree" },
+  { question: "A factor of x^4 - 1 is", choices: ["x^2 + 1","x^2 - 1","both A and B","neither"], answer: "both A and B" },
+  { question: "If x - 3 is a factor of 2x^3 + a x^2 + b x + 6, then a, b satisfy", choices: ["54 + 9a + 3b + 6 = 0","54 + 9a + 3b - 6 = 0","a = b = 0","a = b = -3"], answer: "54 + 9a + 3b + 6 = 0" },
+  { question: "A polynomial of degree 0 is", choices: ["linear","constant (non-zero)","quadratic","not a polynomial"], answer: "constant (non-zero)" },
+  { question: "The graph of y = x^3 has", choices: ["one turning point","two turning points","none","three turning points"], answer: "none" },
+  { question: "The y-intercept of y = (x - 2)(x + 1)(x - 3) is", choices: ["-6","6","-3","3"], answer: "6" },
+  { question: "If a polynomial has an odd multiplicity at x = a, then the graph", choices: ["crosses the x-axis at a","touches at a","has a hole at a","has an asymptote at a"], answer: "crosses the x-axis at a" },
+  { question: "Long division of x^3 + 2x^2 - 5 by x - 1 leaves remainder", choices: ["-4","-6","-2","0"], answer: "-2" },
+  { question: "Using the Remainder Theorem on dividing x^3 + 2x^2 - 5 by x + 1, the remainder is", choices: ["-4","-2","0","4"], answer: "-4" },
+  { question: "If p(x) is degree 4 with 3 distinct real zeros, one zero must have multiplicity", choices: ["1","2","3","4"], answer: "2" },
+  { question: "The graph of y = -(x - 1)^2 (x + 2) near x = 1", choices: ["crosses","touches and turns","asymptote","hole"], answer: "touches and turns" },
+  { question: "End behaviour of y = 5x^7 is", choices: ["down left, up right","up left, down right","up, up","down, down"], answer: "down left, up right" },
+  { question: "If p(x) is even, then its graph is symmetric about the", choices: ["x-axis","y-axis","origin","line y = x"], answer: "y-axis" },
+  { question: "If p(x) is odd, then its graph is symmetric about the", choices: ["x-axis","y-axis","origin","line y = x"], answer: "origin" },
+  { question: "The leading term of (x - 2)^3 is", choices: ["x^3","-8","3x^2","-2x^2"], answer: "x^3" },
+  { question: "If p(x) = x^4 - 3x^3 + 2x, then p(0) =", choices: ["0","2","-3","1"], answer: "0" },
+  { question: "The degree of the product (x^2 + 1)(x^3 - 2) is", choices: ["2","3","5","6"], answer: "5" },
+  { question: "The constant term of (x - 1)(x + 2)(x - 3) is", choices: ["-6","+6","-(1·2·3)","+ (1·2·3)"], answer: "+6" },
+  { question: "If x = 0 is a zero of multiplicity 2 of p(x), then p(x) is divisible by", choices: ["x","x^2","x^3","x^4"], answer: "x^2" },
+  { question: "The number of real zeros of y = x^4 + 1 is", choices: ["0","1","2","4"], answer: "0" },
+  { question: "If a polynomial has degree 6, the maximum number of turning points is", choices: ["6","5","4","3"], answer: "5" },
+  { question: "For p(x) = x^3 - 6x^2 + 11x - 6, one zero is", choices: ["1","2","3","all of A, B, C"], answer: "all of A, B, C" },
+  { question: "The graph of y = (x + 4)(x - 1)^2 at x = -4", choices: ["crosses","touches","hole","asymptote"], answer: "crosses" },
+  { question: "If p(x) has leading coefficient negative and even degree, then end behaviour is", choices: ["up, up","down, down","up left, down right","down left, up right"], answer: "down, down" },
+  { question: "The x-intercepts of y = x(x - 5)(x + 2) are", choices: ["x = -2, 0, 5","x = 2, 0, -5","x = 5, 2 only","none"], answer: "x = -2, 0, 5" }
+];
+
+
+so, now follw the format of the html below to wreit the code by just editing the basci science question to the 100 questions above, dont ask me any questions just do exactly what i said
+ <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Advanced Functions Quiz (Ch.2 & 3)</title>
-  <style>
-    body { font-family: Arial, sans-serif; margin: 20px; }
-    h2 { color: darkblue; }
-    .question { margin-bottom: 20px; padding: 10px; border-bottom: 1px solid #ddd; }
-    .options label { display: block; margin-left: 15px; }
-    #timer { font-weight: bold; color: red; margin-bottom: 20px; }
-    button { padding: 10px 20px; margin-top: 20px; }
-  </style>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>JS3 Basic Science — 70-Question Objective Test</title>
+<style>
+  :root{
+    --bg:#f6f7fb;--card:#fff;--ink:#111;--muted:#555;
+    --ok:#155e75;--okbg:#e0f2fe; /* blue-ish */
+    --bad:#7f1d1d;--badbg:#fee2e2; /* red-ish */
+    --accent:#0a7;--primary:#056;--border:#e5e7eb
+  }
+  *{box-sizing:border-box}
+  body{font-family:Inter,Segoe UI,Arial,sans-serif;background:var(--bg);color:var(--ink);margin:0}
+  header{background:linear-gradient(90deg,#056,#0a7);color:#fff;padding:18px 10px;text-align:center}
+  header h1{margin:.1rem 0 .2rem;font-size:1.35rem}
+  header .sub{opacity:.95;font-size:.95rem}
+  main{max-width:980px;margin:14px auto;padding:10px}
+  .meta{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:10px 0 14px}
+  label.name{font-weight:600}
+  input[type="text"]{padding:.6rem;border-radius:8px;border:1px solid var(--border);width:320px;max-width:100%}
+  #timer{margin-left:auto;font-weight:700;background:#fff;padding:.35rem .6rem;border-radius:8px;border:1px solid var(--border)}
+  .nav-row{display:flex;gap:8px;align-items:center;justify-content:space-between;margin:.25rem 0 1rem}
+  .nav-row .pager{display:flex;gap:8px}
+  .btn{border:0;border-radius:10px;padding:.55rem .9rem;cursor:pointer}
+  .btn.ghost{background:#fff;border:1px solid var(--border)}
+  .btn.primary{background:var(--primary);color:#fff}
+  .btn.accent{background:var(--accent);color:#fff}
+  .questions{display:grid;gap:.85rem}
+  .q{background:var(--card);padding:12px;border-radius:10px;border:1px solid var(--border);box-shadow:0 2px 6px rgba(10,10,20,.05)}
+  .q h4{margin:.2rem 0 .55rem;font-size:1rem;line-height:1.35}
+  .answers label{display:block;cursor:pointer;padding:.35rem .5rem;border-radius:8px;border:1px solid transparent}
+  .answers input{margin-right:.45rem}
+  .answers label:hover{background:#f8fafc}
+  .correct{background:var(--okbg)!important;border-color:#bae6fd}
+  .correct .tag{color:var(--ok);font-weight:700}
+  .wrong{background:var(--badbg)!important;border-color:#fecaca}
+  .wrong .tag{color:var(--bad);font-weight:700}
+  .submit-wrap{display:flex;gap:12px;align-items:center;margin-top:14px}
+  .submit-wrap .left{display:flex;gap:8px;align-items:center}
+  #result{margin-top:10px;font-weight:700}
+  .summary{background:#fff;border:1px dashed #cbd5e1;border-radius:10px;padding:10px;margin-top:10px}
+  .summary h5{margin:.2rem 0 .4rem}
+  footer{margin:2rem 0;text-align:center;color:var(--muted);font-size:.9rem}
+  .note{color:#064e3b;font-size:.9rem}
+  .warn{color:#7f1d1d;font-size:.9rem}
+  @media(max-width:700px){.nav-row{flex-direction:column;align-items:stretch}.nav-row .pager{justify-content:space-between}}
+</style>
 </head>
 <body>
-  <h2>Advanced Functions Quiz – Chapters 2 & 3</h2>
-  <p><strong>Time Allowed:</strong> 60 minutes</p>
-  <div id="timer">Time left: 60:00</div>
+<header>
+  <h1>JS3 Basic Science — Objective Test (70 Questions)</h1>
+  <div class="sub">Eye • Tongue • Genetics • 60 minutes • Continuous numbering</div>
+</header>
 
+<main>
   <form id="quizForm">
-    <label for="studentName"><b>Student Name:</b></label><br>
-    <input type="text" id="studentName" name="studentName" required><br><br>
+    <div class="meta">
+      <label class="name">Student full name
+        <input id="studentName" name="studentName" type="text" placeholder="Enter full name" required />
+      </label>
+      <div id="timer" aria-live="polite">Time left: 60:00</div>
+    </div>
 
-    <div id="quiz"></div>
+    <!-- Navigation kept separate from Submit -->
+    <div class="nav-row" aria-label="navigation-not-submit">
+      <div class="pager">
+        <button type="button" class="btn ghost" id="toTop">↑ Top</button>
+        <button type="button" class="btn ghost" id="toBottom">↓ Bottom</button>
+      </div>
+      <div class="pager">
+        <button type="button" class="btn ghost" id="prevUnanswered">Previous Unanswered</button>
+        <button type="button" class="btn ghost" id="nextUnanswered">Next Unanswered</button>
+      </div>
+    </div>
 
-    <button type="submit">Submit Quiz</button>
+    <section class="questions" id="questionsContainer">
+      <!-- Questions injected by script -->
+    </section>
+
+    <!-- Submit is isolated from nav controls -->
+    <div class="submit-wrap">
+      <div class="left">
+        <button type="submit" class="btn primary" id="submitBtn">Submit answers</button>
+        <span id="result" aria-live="polite"></span>
+      </div>
+    </div>
+
+    <div id="breakdown" class="summary" hidden>
+      <h5>Detailed feedback</h5>
+      <div id="failedNumbers"></div>
+      <ol id="failedList"></ol>
+    </div>
   </form>
+</main>
 
-  <div id="result"></div>
+<footer>
+  <div>Built for JS3 Basic Science — Eye, Tongue, Genetics • Auto-sends only failed questions to teacher email.</div>
+</footer>
 
-  <script>
-    // --------- QUESTIONS ARRAY (100) ---------
-    const questions = [
-      { q: "The graph of y = f(x) + 3 is obtained from y = f(x) by", options: ["left 3","right 3","up 3","down 3"], answer: 2 },
-      { q: "The transformation from y = f(x) to y = f(x - 5) is", options: ["left 5","right 5","up 5","down 5"], answer: 1 },
-      { q: "The graph of y = -f(x) is the reflection of y = f(x) in the", options: ["x-axis","y-axis","line y = x","origin"], answer: 0 },
-      { q: "The graph of y = f(-x) is the reflection of y = f(x) in the", options: ["x-axis","y-axis","line y = x","origin"], answer: 1 },
-      { q: "In y = a f(x), the parameter a produces a", options: ["horizontal stretch by |a|","vertical stretch by |a|","horizontal compression by |a|","vertical compression by |a|"], answer: 1 },
-      { q: "In y = f(kx) with k>1, the graph of y=f(x) is", options: ["horizontally stretched by k","horizontally compressed by k","vertically stretched by k","vertically compressed by k"], answer: 1 },
-      { q: "The transformation from y=f(x) to y=2f(x-1)+4 is", options: ["right 1, vertical stretch 2, up 4","left 1, vertical stretch 2, up 4","right 2, vertical stretch 1, up 4","right 1, horizontal stretch 2, up 4"], answer: 0 },
-      { q: "In y=a f(k(x-d))+c, the correct order is", options: ["vertical then horizontal","horizontal inside then vertical then shifts","shifts first","any order works"], answer: 1 },
-      { q: "If P(3, -2) lies on y=f(x), then on y=f(x)+5 the image is", options: ["(3,3)","(8,-2)","(3,-7)","(-2,3)"], answer: 0 },
-      { q: "If P(2,4) lies on y=f(x), then on y=f(x-3) the image is", options: ["(-1,4)","(5,4)","(2,7)","(2,1)"], answer: 1 },
-      { q: "If P(-6,3) is on y=f(x), then on y=-f(x) the image is", options: ["(-6,-3)","(6,3)","(6,-3)","(-3,-6)"], answer: 0 },
-      { q: "For y=f(2x), a point (x,y) maps to", options: ["(2x,y)","(x/2,y)","(x,2y)","(2x,2y)"], answer: 1 },
-      { q: "The transformation from y=f(x) to y=f(-(x+4))-1 is", options: ["reflect y-axis, left 4, down 1","left 4, reflect y-axis, down 1","right 4, reflect x-axis, down 1","reflect y-axis, right 4, down 1"], answer: 1 },
-      { q: "The domain of y=f(x-2) compared to y=f(x) is", options: ["shifted left 2","shifted right 2","unchanged","doubled"], answer: 2 },
-      { q: "The range of y=3f(x)-2 is", options: ["vertical stretch 3 then down 2","up 2 then stretch 3","horizontal stretch 3 then down 2","reflect then shift"], answer: 0 },
-      { q: "A vertical compression by factor 1/2 is", options: ["y=f(2x)","y=1/2 f(x)","y=f(1/2 x)","y=2f(x)"], answer: 1 },
-      { q: "A horizontal stretch by factor 3 is", options: ["y=f(3x)","y=f(x/3)","y=3f(x)","y=1/3 f(x)"], answer: 1 },
-      { q: "The image of P(1,-5) on y=-2f(x)+3 is", options: ["(1,-10)","(1,13)","(1,7)","(1,-7)"], answer: 2 },
-      { q: "If y=|f(x)|, the portion below x-axis", options: ["disappears","reflects above x-axis","shifts up 1","unchanged"], answer: 1 },
-      { q: "If y=f(|x|), then the graph is", options: ["right half mirrored left","top half mirrored down","stretched vertically","unchanged"], answer: 0 },
-      // … continuing until Q100 …
-      { q: "The x-intercepts of y=x(x-5)(x+2) are", options: ["x=-2,0,5","x=2,0,-5","x=5,2 only","none"], answer: 0 }
-    ];
+<script>
+/* =========================
+   QUIZ DATA (70 MCQs)
+   ========================= */
 
-    // --------- RENDER QUESTIONS ---------
-    const quizDiv = document.getElementById("quiz");
-    questions.forEach((q, i) => {
-      const div = document.createElement("div");
-      div.classList.add("question");
-      div.innerHTML = `<p><b>Q${i+1}:</b> ${q.q}</p>`;
-      q.options.forEach((opt, idx) => {
-        div.innerHTML += `<label><input type="radio" name="q${i}" value="${idx}"> ${opt}</label>`;
-      });
-      quizDiv.appendChild(div);
-    });
+const questions = [
+/* ---------- Section A: Sense Organs – The Eye (1–35) ---------- */
+{q:"Sense organs are composed of:", opts:["Skeletal muscles","Sensory neurons","Connective tissues","Red blood cells"], a:"Sensory neurons"},
+{q:"The main function of sense organs is to:", opts:["Store food","Perceive and respond to surroundings","Produce hormones","Pump blood"], a:"Perceive and respond to surroundings"},
+{q:"Which organ detects light stimuli?", opts:["Ear","Eye","Nose","Tongue"], a:"Eye"},
+{q:"The sensory nerve from the eye to the brain is the:", opts:["Auditory nerve","Optic nerve","Olfactory nerve","Spinal nerve"], a:"Optic nerve"},
+{q:"The three layers of the mammalian eye are sclera, choroid, and:", opts:["Iris","Retina","Cornea","Pupil"], a:"Retina"},
+{q:"The sclera gives the eye its:", opts:["Colour","Shape and protection","Accommodation","Lens position"], a:"Shape and protection"},
+{q:"The transparent front bulge of the sclera is the:", opts:["Lens","Cornea","Pupil","Conjunctiva"], a:"Cornea"},
+{q:"Which part covers the cornea for protection?", opts:["Choroid","Retina","Conjunctiva","Iris"], a:"Conjunctiva"},
+{q:"The black pigment in the choroid is:", opts:["Melanin","Keratin","Myosin","Collagen"], a:"Melanin"},
+{q:"Melanin in the eye helps to:", opts:["Absorb nutrients","Prevent internal reflection of light","Increase refraction","Make tears"], a:"Prevent internal reflection of light"},
+{q:"The iris controls:", opts:["The shape of the eyeball","The amount of light entering the eye","The speed of nerve impulses","The elasticity of the lens"], a:"The amount of light entering the eye"},
+{q:"The opening in the iris is called the:", opts:["Retina","Lens","Pupil","Sclera"], a:"Pupil"},
+{q:"Ciliary muscles are responsible for:", opts:["Producing tears","Changing lens focal length","Protecting the retina","Transmitting impulses"], a:"Changing lens focal length"},
+{q:"The suspensory ligaments attach to:", opts:["Pupil","Cornea","Lens and ciliary muscles","Retina and iris"], a:"Lens and ciliary muscles"},
+{q:"The transparent biconvex structure that bends light is the:", opts:["Cornea","Lens","Conjunctiva","Aqueous humour"], a:"Lens"},
+{q:"The retina is sensitive to:", opts:["Sound","Light","Heat","Pressure"], a:"Light"},
+{q:"Cones are sensitive to:", opts:["Low light only","Bright light and colours","Touch","Sound"], a:"Bright light and colours"},
+{q:"Rods are sensitive to:", opts:["Black and white vision","Red and green colours","Taste sensations","High temperature"], a:"Black and white vision"},
+{q:"The most sensitive part of the retina is the:", opts:["Blind spot","Yellow spot (fovea)","Cornea","Iris"], a:"Yellow spot (fovea)"},
+{q:"The blind spot has:", opts:["Rods only","Cones only","No light-sensitive cells","Both rods and cones"], a:"No light-sensitive cells"},
+{q:"The aqueous humour is located between:", opts:["Lens and retina","Cornea and lens","Iris and pupil","Lens and vitreous humour"], a:"Cornea and lens"},
+{q:"The main function of aqueous humour is to:", opts:["Absorb sound waves","Maintain eye shape and refract light","Provide colour","Support the eyelid"], a:"Maintain eye shape and refract light"},
+{q:"The vitreous humour is:", opts:["A thin membrane","Jelly-like fluid behind the lens","The coloured part of the eye","The transparent cornea"], a:"Jelly-like fluid behind the lens"},
+{q:"Accommodation is the ability of the eye to:", opts:["Change iris colour","Focus near and distant objects","Increase light entry","Expand and contract pupils"], a:"Focus near and distant objects"},
+{q:"Images on the retina are:", opts:["Upright and larger","Real, inverted, and smaller","Virtual and upright","3D and life-size"], a:"Real, inverted, and smaller"},
+{q:"The cooperation of two eyes for depth perception is called:", opts:["Monocular vision","Binocular vision","Parallel vision","Lateral vision"], a:"Binocular vision"},
+{q:"In myopia, the image forms:", opts:["Behind the retina","On the retina","In front of the retina","On the cornea"], a:"In front of the retina"},
+{q:"Myopia is corrected with:", opts:["Convex lens","Concave lens","Cylindrical lens","Bifocal lens"], a:"Concave lens"},
+{q:"Hypermetropia is caused by:", opts:["Short eyeball","Long eyeball","Weak optic nerve","Damaged cornea"], a:"Short eyeball"},
+{q:"Astigmatism is due to:", opts:["Uneven curvature of cornea or lens","Small pupil size","Excess aqueous humour","Weak retina"], a:"Uneven curvature of cornea or lens"},
+{q:"Presbyopia is related to:", opts:["Old age","Newborn babies","Overuse of eyes in reading","Colour blindness"], a:"Old age"},
+{q:"Colour blindness affects mainly:", opts:["Blue and yellow","Red and green distinction","Black and white","Purple and orange"], a:"Red and green distinction"},
+{q:"Cataract is a condition in which:", opts:["Lens becomes cloudy","Cornea becomes curved","Pupil enlarges","Retina loses cells"], a:"Lens becomes cloudy"},
+{q:"Cataract can be treated by:", opts:["Eye drops","Lens replacement surgery","Convex lens","Concave lens"], a:"Lens replacement surgery"},
+{q:"One rule for caring for the eyes is:", opts:["Read in dim light","Avoid rubbing the eyes with dirty hands","Play with sharp objects","Ignore regular cleaning"], a:"Avoid rubbing the eyes with dirty hands"},
 
-    // --------- TIMER ---------
-    let time = 60*60; 
-    const timerDiv = document.getElementById("timer");
-    const timer = setInterval(() => {
-      let min = Math.floor(time/60);
-      let sec = time%60;
-      timerDiv.textContent = `Time left: ${min}:${sec<10?"0":""}${sec}`;
-      if(time <= 0){ 
-        clearInterval(timer); 
-        document.getElementById("quizForm").requestSubmit(); 
+/* ---------- Section B: Sense Organs – The Tongue (36–45) ---------- */
+{q:"The tongue is mainly:", opts:["A skeletal bone","A muscular organ","A gland","A nerve"], a:"A muscular organ"},
+{q:"The small bumps on the tongue are called:", opts:["Papillae","Taste pores","Cilia","Folds"], a:"Papillae"},
+{q:"Papillae contain:", opts:["Salivary glands","Taste buds","Lens cells","Rod cells"], a:"Taste buds"},
+{q:"Taste buds detect:", opts:["Sweet, sour, bitter, salty","Hot, cold, rough, smooth","Black, white, red, green","Large, small, soft, hard"], a:"Sweet, sour, bitter, salty"},
+{q:"Sweet taste is detected mainly at:", opts:["Back of tongue","Tip of tongue","Middle of tongue","Sides of tongue"], a:"Tip of tongue"},
+{q:"Salt taste is detected mainly at:", opts:["Sides towards the front","Centre of tongue","Back of tongue","All over tongue only"], a:"Sides towards the front"},
+{q:"Bitter taste is detected mainly at:", opts:["Tip","Sides","Back towards throat","Middle"], a:"Back towards throat"},
+{q:"Sour taste is detected mainly:", opts:["Behind the salt taste buds","In the middle","At the tip","At the back"], a:"Behind the salt taste buds"},
+{q:"We can taste substances only when:", opts:["They are solid","They are in solution","They are hot","They are large"], a:"They are in solution"},
+{q:"Savoury taste is detected:", opts:["By the middle part of tongue","By the tip","By the back","By the sides"], a:"By the middle part of tongue"},
+
+/* ---------- Section C: Genetics (46–70) ---------- */
+{q:"Genetics is the study of:", opts:["Cells and tissues","Heredity and variation","Plants only","Fossils"], a:"Heredity and variation"},
+{q:"Heredity is:", opts:["Transmission of traits from parents to offspring","Change in body due to climate","Growth in plants","Eating patterns"], a:"Transmission of traits from parents to offspring"},
+{q:"Variation refers to:", opts:["Identical features in all organisms","Differences among individuals","Changes in climate","Body temperature control"], a:"Differences among individuals"},
+{q:"Chromosomes are found in:", opts:["Cytoplasm","Nucleus","Cell wall","Mitochondria"], a:"Nucleus"},
+{q:"Humans normally have how many pairs of chromosomes?", opts:["20","21","23","25"], a:"23"},
+{q:"Genes are located on:", opts:["Mitochondria","Chromosomes","Cytoplasm","Ribosomes"], a:"Chromosomes"},
+{q:"A matured sex cell is called:", opts:["Zygote","Gamete","Chromosome","Allele"], a:"Gamete"},
+{q:"Haploid gametes have:", opts:["One set of chromosomes","Two sets of chromosomes","Three sets of chromosomes","Four sets of chromosomes"], a:"One set of chromosomes"},
+{q:"Diploid cells have:", opts:["n chromosomes","2n chromosomes","3n chromosomes","4n chromosomes"], a:"2n chromosomes"},
+{q:"A zygote is formed when:", opts:["Two male gametes unite","Male and female gametes unite","Female gametes divide","Cells split"], a:"Male and female gametes unite"},
+{q:"Alleles control:", opts:["The same character in contrasting forms","Only eye colour","Growth rate","Diet"], a:"The same character in contrasting forms"},
+{q:"Phenotype is:", opts:["The observable traits of an organism","The gene combination only","The DNA sequence","The chromosome number"], a:"The observable traits of an organism"},
+{q:"Genotype refers to:", opts:["Only physical traits","The genetic make-up of an organism","Blood type only","Visible differences"], a:"The genetic make-up of an organism"},
+{q:"Dominant traits:", opts:["Are always hidden","Are expressed when present","Cannot be inherited","Appear only in recessive form"], a:"Are expressed when present"},
+{q:"Recessive traits:", opts:["Are always expressed","Are hidden when dominant gene is present","Control dominant features","Occur only in plants"], a:"Are hidden when dominant gene is present"},
+{q:"Homozygous means:", opts:["Two identical alleles","Two different alleles","One allele only","No alleles"], a:"Two identical alleles"},
+{q:"Heterozygous means:", opts:["Two identical alleles","Two different alleles","No alleles","One allele only"], a:"Two different alleles"},
+{q:"A hybrid is:", opts:["The offspring from genotypically different parents","An identical twin","A recessive organism","A mutated plant"], a:"The offspring from genotypically different parents"},
+{q:"Test cross is used to:", opts:["Determine genotype of an organism","Increase plant growth","Change phenotype","Count chromosomes"], a:"Determine genotype of an organism"},
+{q:"Mutation is:", opts:["Change in genetic make-up","Production of gametes","Eye colour change with age","Diet change"], a:"Change in genetic make-up"},
+{q:"Monohybrid cross studies:", opts:["One character at a time","Two characters at a time","Many characters at once","Colour traits only"], a:"One character at a time"},
+{q:"In a monohybrid cross, one parent has:", opts:["Two dominant alleles","Two recessive alleles","One of each type","Either A or B"], a:"Either A or B"},
+{q:"F1 generation refers to:", opts:["First filial generation","Second filial generation","Mutant offspring","Hybrid parents"], a:"First filial generation"},
+{q:"The location of a gene on a chromosome is called:", opts:["Allele","Locus","Centre","Genotype"], a:"Locus"},
+{q:"Which factor can affect how inherited traits are expressed?", opts:["Environment","Eye colour","Number of taste buds","Type of gametes"], a:"Environment"},
+];
+
+/* =========================
+   DOM BUILD
+   ========================= */
+const container = document.getElementById('questionsContainer');
+
+questions.forEach((Q, i) => {
+  const number = i + 1;
+  const div = document.createElement('div');
+  div.className = 'q';
+  const h = document.createElement('h4');
+  h.textContent = `${number}. ${Q.q}`;
+  div.appendChild(h);
+
+  const ans = document.createElement('div');
+  ans.className = 'answers';
+  Q.opts.forEach(opt => {
+    const id = `q${i}-${sanitizeId(opt)}`;
+    const lbl = document.createElement('label');
+    lbl.setAttribute('for', id);
+    const radio = document.createElement('input');
+    radio.type='radio'; radio.name=`q${i}`; radio.value=opt; radio.id=id; radio.required=true;
+    lbl.appendChild(radio);
+    lbl.appendChild(document.createTextNode(' ' + opt));
+    ans.appendChild(lbl);
+  });
+  div.appendChild(ans);
+  container.appendChild(div);
+});
+
+function sanitizeId(s){ return s.replace(/[^a-z0-9]+/gi,'-'); }
+
+/* =========================
+   TIMER (60 minutes)
+   ========================= */
+let timeLeft = 60 * 60; // seconds
+const timerEl = document.getElementById('timer');
+const timerInterval = setInterval(()=>{
+  if(timeLeft <= 0){
+    clearInterval(timerInterval);
+    timerEl.textContent = 'Time left: 00:00';
+    document.getElementById('quizForm').requestSubmit();
+    return;
+  }
+  const m = Math.floor(timeLeft/60).toString().padStart(2,'0');
+  const s = (timeLeft%60).toString().padStart(2,'0');
+  timerEl.textContent = `Time left: ${m}:${s}`;
+  timeLeft--;
+}, 1000);
+
+/* =========================
+   NAV CONTROLS (separate from submit)
+   ========================= */
+document.getElementById('toTop').onclick = ()=>window.scrollTo({top:0,behavior:'smooth'});
+document.getElementById('toBottom').onclick = ()=>window.scrollTo({top:document.body.scrollHeight,behavior:'smooth'});
+
+function firstUnansweredIndex(step=+1){
+  const total = questions.length;
+  let start = 0;
+  // check current viewport roughly
+  const qs = [...document.querySelectorAll('.q')];
+  const mid = window.scrollY + window.innerHeight/2;
+  let near = 0;
+  qs.forEach((el,idx)=>{
+    const r = el.getBoundingClientRect();
+    const y = r.top + window.scrollY;
+    if (y < mid) near = idx;
+  });
+  start = near;
+  for(let k=1;k<=total;k++){
+    const i = ((start + step*k) % total + total) % total;
+    if(!document.querySelector(`input[name="q${i}"]:checked`)) return i;
+  }
+  return -1;
+}
+document.getElementById('nextUnanswered').onclick = ()=>{
+  const idx = firstUnansweredIndex(+1);
+  if(idx>=0) document.querySelectorAll('.q')[idx].scrollIntoView({behavior:'smooth',block:'center'});
+};
+document.getElementById('prevUnanswered').onclick = ()=>{
+  const idx = firstUnansweredIndex(-1);
+  if(idx>=0) document.querySelectorAll('.q')[idx].scrollIntoView({behavior:'smooth',block:'center'});
+};
+
+/* =========================
+   SUBMIT / SCORE / HIGHLIGHT / SEND WRONGS
+   ========================= */
+const form = document.getElementById('quizForm');
+const result = document.getElementById('result');
+const breakdown = document.getElementById('breakdown');
+const failedNumbersEl = document.getElementById('failedNumbers');
+const failedListEl = document.getElementById('failedList');
+
+form.addEventListener('submit', async (e)=>{
+  e.preventDefault();
+  clearInterval(timerInterval);
+
+  const name = document.getElementById('studentName').value.trim();
+  if(!name){ alert('Please enter student name'); return; }
+
+  // Confirm before final submission
+  const ok = confirm('Are you sure you want to submit your answers?');
+  if(!ok) return;
+
+  // Gather answers and score
+  const formData = new FormData(form);
+  let score = 0;
+  const total = questions.length;
+  const wrongs = []; // for sending
+  const failedNumbers = [];
+
+  // Clear old highlighting
+  document.querySelectorAll('.answers label').forEach(l => {
+    l.classList.remove('correct','wrong');
+    const tag = l.querySelector('.tag');
+    if(tag) tag.remove();
+  });
+
+  for(let i=0;i<questions.length;i++){
+    const given = formData.get(`q${i}`);
+    const correct = questions[i].a;
+
+    // highlight selection + correct
+    const labels = [...document.querySelectorAll(`input[name="q${i}"]`)].map(inp=>inp.parentElement);
+    labels.forEach(lbl=>{
+      const val = lbl.querySelector('input').value;
+      if(val === correct){
+        addTag(lbl,'Correct');
+        lbl.classList.add('correct');
       }
-      time--;
-    }, 1000);
-
-    // --------- SUBMISSION ---------
-    document.getElementById("quizForm").addEventListener("submit", function(e){
-      e.preventDefault();
-      let score = 0, failed = [];
-      questions.forEach((q, i) => {
-        const selected = document.querySelector(`input[name="q${i}"]:checked`);
-        if(selected && parseInt(selected.value) === q.answer){
-          score++;
-        } else {
-          failed.push(`Q${i+1}: ${q.q} (Correct: ${q.options[q.answer]})`);
-        }
-      });
-
-      const studentName = document.getElementById("studentName").value;
-      document.getElementById("result").innerHTML =
-        `<h3>${studentName}, your score is ${score} / ${questions.length}</h3>`;
-
-      // --------- SEND TO FORMSPREE ---------
-      fetch("https://formspree.io/f/mvgqwywl", {
-        method: "POST",
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name: studentName,
-          score: score,
-          failed: failed.join("\n")
-        })
-      });
     });
-  </script>
+
+    if(given === correct){
+      score++;
+    }else{
+      failedNumbers.push(i+1);
+      const wrongLabel = document.querySelector(`input[name="q${i}"]:checked`)?.parentElement;
+      if(wrongLabel){
+        addTag(wrongLabel,'Your choice');
+        wrongLabel.classList.add('wrong');
+      }
+      wrongs.push({
+        number: i+1,
+        question: questions[i].q,
+        your_answer: given ?? "(no answer)",
+        correct_answer: correct
+      });
+    }
+  }
+
+  // Show result to student
+  result.textContent = `${name}: You scored ${score} / ${total}.`;
+
+  // Show exactly which questions were failed
+  breakdown.hidden = false;
+  if(wrongs.length){
+    failedNumbersEl.textContent = `You missed these question numbers: ${failedNumbers.join(', ')}.`;
+    failedListEl.innerHTML = '';
+    wrongs.forEach(w=>{
+      const li = document.createElement('li');
+      li.innerHTML = `<strong>Q${w.number}.</strong> ${escapeHtml(w.question)}<br>
+        <em>Your answer:</em> ${escapeHtml(w.your_answer)}<br>
+        <em>Correct answer:</em> ${escapeHtml(w.correct_answer)}`;
+      failedListEl.appendChild(li);
+    });
+  }else{
+    failedNumbersEl.textContent = 'Perfect! You did not miss any question.';
+    failedListEl.innerHTML = '';
+  }
+
+  // Prepare payload: only wrong answers + summary
+  const payload = {
+    student_name: name,
+    score: `${score}/${total}`,
+    failed_numbers: failedNumbers.join(', '),
+    wrong_count: wrongs.length,
+    wrongs // only failed questions with correct answers
+  };
+
+  // Send to Formspree (teacher email)
+  try {
+    await fetch('https://formspree.io/f/mvgqwywl', {
+      method:'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({
+        subject: `Basic Science Quiz — ${name} — ${score}/${total}`,
+        message: `Student: ${name}\nScore: ${score}/${total}\nFailed numbers: ${payload.failed_numbers || 'None'}`,
+        payload
+      })
+    });
+    const note = document.createElement('div');
+    note.className='note';
+    note.textContent = 'Only the failed questions have been sent to the teacher email.';
+    result.appendChild(document.createElement('br'));
+    result.appendChild(note);
+  } catch(err) {
+    const warn = document.createElement('div');
+    warn.className='warn';
+    warn.textContent = 'Could not send results to email (network/CORS). Your score and feedback are shown above.';
+    result.appendChild(document.createElement('br'));
+    result.appendChild(warn);
+    console.error(err);
+  }
+});
+
+// Add a small tag to a label ("Correct" / "Your choice")
+function addTag(label, text){
+  if(label.querySelector('.tag')) return;
+  const span = document.createElement('span');
+  span.className = 'tag';
+  span.style.marginLeft = '6px';
+  span.textContent = `(${text})`;
+  label.appendChild(span);
+}
+
+// Accessibility: jump to first unanswered on invalid
+form.addEventListener('invalid', function(ev){
+  ev.preventDefault();
+  for(let i=0;i<questions.length;i++){
+    if(!document.querySelector(`input[name="q${i}"]:checked`)){
+      const el = document.querySelector(`input[name="q${i}"]`);
+      if(el){ el.scrollIntoView({behavior:'smooth',block:'center'}); el.focus(); }
+      break;
+    }
+  }
+}, true);
+
+// Escape helper
+function escapeHtml(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+</script>
 </body>
 </html>
+
+use this code and insert the 100 questiosn and removed the basic science
