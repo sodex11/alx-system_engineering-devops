@@ -1,0 +1,299 @@
+// format for html
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>JS3 Basic Science — 100-Question Objective Test</title>
+<style>
+  :root{
+    --bg:#f6f7fb;--card:#fff;--ink:#111;--muted:#555;
+    --ok:#155e75;--okbg:#e0f2fe;
+    --bad:#7f1d1d;--badbg:#fee2e2;
+    --accent:#0a7;--primary:#056;--border:#e5e7eb
+  }
+  *{box-sizing:border-box}
+  body{font-family:Inter,Segoe UI,Arial,sans-serif;background:var(--bg);color:var(--ink);margin:0}
+  header{background:linear-gradient(90deg,#056,#0a7);color:#fff;padding:18px 10px;text-align:center}
+  header h1{margin:.1rem 0 .2rem;font-size:1.35rem}
+  header .sub{opacity:.95;font-size:.95rem}
+  main{max-width:980px;margin:14px auto;padding:10px}
+  .meta{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:10px 0 14px}
+  label.name{font-weight:600}
+  input[type="text"]{padding:.6rem;border-radius:8px;border:1px solid var(--border);width:320px;max-width:100%}
+  #timer{margin-left:auto;font-weight:700;background:#fff;padding:.35rem .6rem;border-radius:8px;border:1px solid var(--border)}
+  .nav-row{display:flex;gap:8px;align-items:center;justify-content:space-between;margin:.25rem 0 1rem}
+  .nav-row .pager{display:flex;gap:8px}
+  .btn{border:0;border-radius:10px;padding:.55rem .9rem;cursor:pointer}
+  .btn.ghost{background:#fff;border:1px solid var(--border)}
+  .btn.primary{background:var(--primary);color:#fff}
+  .btn.accent{background:var(--accent);color:#fff}
+  .questions{display:grid;gap:.85rem}
+  .q{background:var(--card);padding:12px;border-radius:10px;border:1px solid var(--border);box-shadow:0 2px 6px rgba(10,10,20,.05)}
+  .q h4{margin:.2rem 0 .55rem;font-size:1rem;line-height:1.35}
+  .answers label{display:block;cursor:pointer;padding:.35rem .5rem;border-radius:8px;border:1px solid transparent}
+  .answers input{margin-right:.45rem}
+  .answers label:hover{background:#f8fafc}
+  .correct{background:var(--okbg)!important;border-color:#bae6fd}
+  .correct .tag{color:var(--ok);font-weight:700}
+  .wrong{background:var(--badbg)!important;border-color:#fecaca}
+  .wrong .tag{color:var(--bad);font-weight:700}
+  .submit-wrap{display:flex;gap:12px;align-items:center;margin-top:14px}
+  .submit-wrap .left{display:flex;gap:8px;align-items:center}
+  #result{margin-top:10px;font-weight:700}
+  .summary{background:#fff;border:1px dashed #cbd5e1;border-radius:10px;padding:10px;margin-top:10px}
+  .summary h5{margin:.2rem 0 .4rem}
+  footer{margin:2rem 0;text-align:center;color:var(--muted);font-size:.9rem}
+  .note{color:#064e3b;font-size:.9rem}
+  .warn{color:#7f1d1d;font-size:.9rem}
+  @media(max-width:700px){.nav-row{flex-direction:column;align-items:stretch}.nav-row .pager{justify-content:space-between}}
+</style>
+</head>
+<body>
+<header>
+  <h1>JS3 Basic Science — Objective Test (100 Questions)</h1>
+  <div class="sub">Sections A → D • 90 minutes • Continuous numbering</div>
+</header>
+
+<main>
+  <form id="quizForm">
+    <div class="meta">
+      <label class="name">Student full name
+        <input id="studentName" name="studentName" type="text" placeholder="Enter full name" required />
+      </label>
+      <div id="timer" aria-live="polite">Time left: 90:00</div>
+    </div>
+
+    <div class="nav-row" aria-label="navigation-not-submit">
+      <div class="pager">
+        <button type="button" class="btn ghost" id="toTop" aria-label="Go to top">↑ Top</button>
+        <button type="button" class="btn ghost" id="toBottom" aria-label="Go to bottom">↓ Bottom</button>
+      </div>
+      <div class="pager">
+        <button type="button" class="btn ghost" id="prevUnanswered" aria-label="Previous unanswered question">Previous Unanswered</button>
+        <button type="button" class="btn ghost" id="nextUnanswered" aria-label="Next unanswered question">Next Unanswered</button>
+      </div>
+    </div>
+
+    <section class="questions" id="questionsContainer"></section>
+
+    <div class="submit-wrap">
+      <div class="left">
+        <button type="submit" class="btn primary" id="submitBtn">Submit answers</button>
+        <span id="result" aria-live="polite"></span>
+      </div>
+    </div>
+
+    <div id="breakdown" class="summary" hidden>
+      <h5>Detailed feedback</h5>
+      <div id="failedNumbers"></div>
+      <hr>
+      <ol id="failedList"></ol>
+    </div>
+  </form>
+</main>
+
+<footer>
+  <div>Built for JS3 Basic Science • Auto-sends only failed questions to teacher email.</div>
+</footer>
+
+<script>
+/* =========================
+   QUIZ DATA (100 MCQs)
+   ========================= */
+
+  
+
+/* =========================
+   DOM BUILD
+   ========================= */
+const container = document.getElementById('questionsContainer');
+questions.forEach((Q, i) => {
+  const number = i + 1;
+  const div = document.createElement('div');
+  div.className = 'q';
+  const h = document.createElement('h4');
+  h.textContent = `${number}. ${Q.q}`;
+  div.appendChild(h);
+
+  const ans = document.createElement('div');
+  ans.className = 'answers';
+  Q.opts.forEach(opt => {
+    const id = `q${i}-${sanitizeId(opt)}`;
+    const lbl = document.createElement('label');
+    lbl.setAttribute('for', id);
+    const radio = document.createElement('input');
+    radio.type='radio'; radio.name=`q${i}`; radio.value=opt; radio.id=id; radio.required=true;
+    lbl.appendChild(radio);
+    lbl.appendChild(document.createTextNode(' ' + opt));
+    ans.appendChild(lbl);
+  });
+  div.appendChild(ans);
+  container.appendChild(div);
+});
+function sanitizeId(s){ return s.replace(/[^a-z0-9]+/gi,'-'); }
+
+/* =========================
+   TIMER (90 minutes)
+   ========================= */
+let timeLeft = 90 * 60; // seconds
+const timerEl = document.getElementById('timer');
+const timerInterval = setInterval(()=>{
+  if(timeLeft <= 0){
+    clearInterval(timerInterval);
+    timerEl.textContent = 'Time left: 00:00';
+    document.getElementById('quizForm').requestSubmit();
+    return;
+  }
+  const m = Math.floor(timeLeft/60).toString().padStart(2,'0');
+  const s = (timeLeft%60).toString().padStart(2,'0');
+  timerEl.textContent = `Time left: ${m}:${s}`;
+  timeLeft--;
+}, 1000);
+
+/* =========================
+   NAV CONTROLS
+   ========================= */
+document.getElementById('toTop').onclick = ()=>window.scrollTo({top:0,behavior:'smooth'});
+document.getElementById('toBottom').onclick = ()=>window.scrollTo({top:document.body.scrollHeight,behavior:'smooth'});
+
+function firstUnansweredIndex(step=+1){
+  const total = questions.length;
+  const qs = [...document.querySelectorAll('.q')];
+  const mid = window.scrollY + window.innerHeight/2;
+  let near = 0;
+  qs.forEach((el,idx)=>{
+    const r = el.getBoundingClientRect();
+    const y = r.top + window.scrollY;
+    if (y < mid) near = idx;
+  });
+  for(let k=1;k<=total;k++){
+    const i = ((near + step*k) % total + total) % total;
+    if(!document.querySelector(`input[name="q${i}"]:checked`)) return i;
+  }
+  return -1;
+}
+document.getElementById('nextUnanswered').onclick = ()=>{
+  const idx = firstUnansweredIndex(+1);
+  if(idx>=0) document.querySelectorAll('.q')[idx].scrollIntoView({behavior:'smooth',block:'center'});
+};
+document.getElementById('prevUnanswered').onclick = ()=>{
+  const idx = firstUnansweredIndex(-1);
+  if(idx>=0) document.querySelectorAll('.q')[idx].scrollIntoView({behavior:'smooth',block:'center'});
+};
+
+/* =========================
+   SUBMIT / SCORE / FEEDBACK
+   ========================= */
+const form = document.getElementById('quizForm');
+const result = document.getElementById('result');
+const breakdown = document.getElementById('breakdown');
+const failedNumbersEl = document.getElementById('failedNumbers');
+const failedListEl = document.getElementById('failedList');
+
+form.addEventListener('submit', async (e)=>{
+  e.preventDefault();
+  clearInterval(timerInterval);
+
+  const name = document.getElementById('studentName').value.trim();
+  if(!name){ alert('Please enter student name'); return; }
+
+  const ok = confirm('Are you sure you want to submit your answers?');
+  if(!ok) return;
+
+  const formData = new FormData(form);
+  let score = 0;
+  const wrongs = [];
+  const failedNumbers = [];
+
+  document.querySelectorAll('.answers label').forEach(l => l.classList.remove('correct','wrong'));
+
+  for(let i=0;i<questions.length;i++){
+    const given = formData.get(`q${i}`);
+    const correct = questions[i].a;
+    const labels = [...document.querySelectorAll(`input[name="q${i}"]`)].map(inp=>inp.parentElement);
+
+    labels.forEach(lbl=>{
+      if(lbl.querySelector('input').value === correct){
+        addTag(lbl,'Correct');
+        lbl.classList.add('correct');
+      }
+    });
+
+    if(given === correct){
+      score++;
+    }else{
+      failedNumbers.push(i+1);
+      const wrongLabel = document.querySelector(`input[name="q${i}"]:checked`)?.parentElement;
+      if(wrongLabel){
+        addTag(wrongLabel,'Your choice');
+        wrongLabel.classList.add('wrong');
+      }
+      wrongs.push({number: i+1, question: questions[i].q, your_answer: given ?? "(no answer)", correct_answer: correct});
+    }
+  }
+
+  result.textContent = `${name}: You scored ${score} / ${questions.length}.`;
+
+  if(wrongs.length){
+    breakdown.hidden = false;
+    failedNumbersEl.textContent = `You missed these question numbers: ${failedNumbers.join(', ')}.`;
+    failedListEl.innerHTML = '';
+    wrongs.forEach(w=>{
+      const li = document.createElement('li');
+      li.innerHTML = `<strong>Q${w.number}.</strong> ${escapeHtml(w.question)}<br>
+        <em>Your answer:</em> ${escapeHtml(w.your_answer)}<br>
+        <em>Correct answer:</em> ${escapeHtml(w.correct_answer)}`;
+      failedListEl.appendChild(li);
+    });
+  }else{
+    breakdown.hidden = false;
+    failedNumbersEl.textContent = 'Perfect! You did not miss any question.';
+    failedListEl.innerHTML = '';
+  }
+
+  try {
+    await fetch('https://formspree.io/f/mvgqwywl', {
+      method:'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({
+        subject: `Basic Science Quiz — ${name} — ${score}/${questions.length}`,
+        message: `Student: ${name}\nScore: ${score}/${questions.length}\nFailed numbers: ${failedNumbers.join(', ') || 'None'}`,
+        wrongs
+      })
+    });
+    const note = document.createElement('div');
+    note.className='note';
+    note.textContent = 'Only the failed questions have been sent to the teacher email.';
+    result.appendChild(document.createElement('br'));
+    result.appendChild(note);
+  } catch(err) {
+    const warn = document.createElement('div');
+    warn.className='warn';
+    warn.textContent = 'Could not send results to email (network/CORS). Your score and feedback are shown above.';
+    result.appendChild(document.createElement('br'));
+    result.appendChild(warn);
+  }
+});
+function addTag(label, text){
+  if(label.querySelector('.tag')) return;
+  const span = document.createElement('span');
+  span.className = 'tag';
+  span.style.marginLeft = '6px';
+  span.textContent = `(${text})`;
+  label.appendChild(span);
+}
+form.addEventListener('invalid', function(ev){
+  ev.preventDefault();
+  for(let i=0;i<questions.length;i++){
+    if(!document.querySelector(`input[name="q${i}"]:checked`)){
+      const el = document.querySelector(`input[name="q${i}"]`);
+      if(el){ el.scrollIntoView({behavior:'smooth',block:'center'}); el.focus(); }
+      break;
+    }
+  }
+}, true);
+function escapeHtml(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+</script>
+</body>
+</html>
