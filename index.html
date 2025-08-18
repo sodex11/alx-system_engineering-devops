@@ -1,0 +1,403 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Pre Calculus — 100-Question Objective Test</title>
+<style>
+  :root{
+    --bg:#f6f7fb;--card:#fff;--ink:#111;--muted:#555;
+    --ok:#155e75;--okbg:#e0f2fe;
+    --bad:#7f1d1d;--badbg:#fee2e2;
+    --accent:#0a7;--primary:#056;--border:#e5e7eb
+  }
+  *{box-sizing:border-box}
+  body{font-family:Inter,Segoe UI,Arial,sans-serif;background:var(--bg);color:var(--ink);margin:0}
+  header{background:linear-gradient(90deg,#056,#0a7);color:#fff;padding:18px 10px;text-align:center}
+  header h1{margin:.1rem 0 .2rem;font-size:1.35rem}
+  header .sub{opacity:.95;font-size:.95rem}
+  main{max-width:980px;margin:14px auto;padding:10px}
+  .meta{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:10px 0 14px}
+  label.name{font-weight:600}
+  input[type="text"]{padding:.6rem;border-radius:8px;border:1px solid var(--border);width:320px;max-width:100%}
+  #timer{margin-left:auto;font-weight:700;background:#fff;padding:.35rem .6rem;border-radius:8px;border:1px solid var(--border)}
+  .nav-row{display:flex;gap:8px;align-items:center;justify-content:space-between;margin:.25rem 0 1rem}
+  .nav-row .pager{display:flex;gap:8px}
+  .btn{border:0;border-radius:10px;padding:.55rem .9rem;cursor:pointer}
+  .btn.ghost{background:#fff;border:1px solid var(--border)}
+  .btn.primary{background:var(--primary);color:#fff}
+  .btn.accent{background:var(--accent);color:#fff}
+  .questions{display:grid;gap:.85rem}
+  .q{background:var(--card);padding:12px;border-radius:10px;border:1px solid var(--border);box-shadow:0 2px 6px rgba(10,10,20,.05)}
+  .q h4{margin:.2rem 0 .55rem;font-size:1rem;line-height:1.35}
+  .answers label{display:block;cursor:pointer;padding:.35rem .5rem;border-radius:8px;border:1px solid transparent}
+  .answers input{margin-right:.45rem}
+  .answers label:hover{background:#f8fafc}
+  .correct{background:var(--okbg)!important;border-color:#bae6fd}
+  .correct .tag{color:var(--ok);font-weight:700}
+  .wrong{background:var(--badbg)!important;border-color:#fecaca}
+  .wrong .tag{color:var(--bad);font-weight:700}
+  .submit-wrap{display:flex;gap:12px;align-items:center;margin-top:14px}
+  .submit-wrap .left{display:flex;gap:8px;align-items:center}
+  #result{margin-top:10px;font-weight:700}
+  .summary{background:#fff;border:1px dashed #cbd5e1;border-radius:10px;padding:10px;margin-top:10px}
+  .summary h5{margin:.2rem 0 .4rem}
+  footer{margin:2rem 0;text-align:center;color:var(--muted);font-size:.9rem}
+  .note{color:#064e3b;font-size:.9rem}
+  .warn{color:#7f1d1d;font-size:.9rem}
+  @media(max-width:700px){.nav-row{flex-direction:column;align-items:stretch}.nav-row .pager{justify-content:space-between}}
+</style>
+</head>
+<body>
+<header>
+  <h1>Pre Calculus — Objective Test (100 Questions)</h1>
+  <div class="sub">Sections A → D • 90 minutes • Continuous numbering</div>
+</header>
+
+<main>
+  <form id="quizForm">
+    <div class="meta">
+      <label class="name">Student full name
+        <input id="studentName" name="studentName" type="text" placeholder="Enter full name" required />
+      </label>
+      <div id="timer" aria-live="polite">Time left: 60:00</div>
+    </div>
+
+    <div class="nav-row" aria-label="navigation-not-submit">
+      <div class="pager">
+        <button type="button" class="btn ghost" id="toTop" aria-label="Go to top">↑ Top</button>
+        <button type="button" class="btn ghost" id="toBottom" aria-label="Go to bottom">↓ Bottom</button>
+      </div>
+      <div class="pager">
+        <button type="button" class="btn ghost" id="prevUnanswered" aria-label="Previous unanswered question">Previous Unanswered</button>
+        <button type="button" class="btn ghost" id="nextUnanswered" aria-label="Next unanswered question">Next Unanswered</button>
+      </div>
+    </div>
+
+    <section class="questions" id="questionsContainer"></section>
+
+    <div class="submit-wrap">
+      <div class="left">
+        <button type="submit" class="btn primary" id="submitBtn">Submit answers</button>
+        <span id="result" aria-live="polite"></span>
+      </div>
+    </div>
+
+    <div id="breakdown" class="summary" hidden>
+      <h5>Detailed feedback</h5>
+      <div id="failedNumbers"></div>
+      <hr>
+      <ol id="failedList"></ol>
+    </div>
+  </form>
+</main>
+
+<footer>
+  <div>Built for JS3 Basic Science • Auto-sends only failed questions to teacher email.</div>
+</footer>
+
+<script>
+/* =========================
+   QUIZ DATA (100 MCQs)
+   ========================= */
+
+const questions = [
+  // ----- Chapter 2: Polynomial Functions (1–50) -----
+  { question: "Which of the following describes the end behaviour of an odd-degree polynomial with a positive leading coefficient?", choices: ["Both ends up", "Both ends down", "Left down, right up", "Left up, right down"], answer: "Left down, right up" },
+  { question: "The degree of the polynomial f(x) = (x+1)(x-2)^3(x^2+1) is:", choices: ["5", "6", "7", "8"], answer: "6" },
+  { question: "A polynomial of degree 4 can have at most:", choices: ["2 turning points", "3 turning points", "4 turning points", "5 turning points"], answer: "3 turning points" },
+  { question: "If f(x) = x^3 - 6x^2 + 11x - 6, the zeros are:", choices: ["1, 2, 3", "-1, -2, -3", "0, 1, 2", "None of the above"], answer: "1, 2, 3" },
+  { question: "Which theorem states that if a polynomial f(x) is divided by x-a, the remainder is f(a)?", choices: ["Fundamental Theorem of Algebra", "Remainder Theorem", "Factor Theorem", "Polynomial Division Rule"], answer: "Remainder Theorem" },
+  { question: "The multiplicity of the root x = 2 in f(x) = (x-2)^4(x+1) is:", choices: ["1", "2", "3", "4"], answer: "4" },
+  { question: "The Fundamental Theorem of Algebra guarantees that a degree n polynomial has:", choices: ["At most n real roots", "Exactly n real roots", "Exactly n complex roots (real or non-real)", "At least n rational roots"], answer: "Exactly n complex roots (real or non-real)" },
+  { question: "The polynomial f(x) = x^4 - 16 factors as:", choices: ["(x^2 - 4)(x^2 + 4)", "(x-4)(x+4)(x^2+4)", "(x-2)(x+2)(x-4)(x+4)", "All of the above"], answer: "All of the above" },
+  { question: "If f(x) = x^3 - 4x^2 + 5x - 2, and x=1 is a root, the other factorization is:", choices: ["(x-1)(x^2 - 3x + 2)", "(x+1)(x^2 - 3x + 2)", "(x-1)(x^2 - 4x + 1)", "None"], answer: "(x-1)(x^2 - 3x + 2)" },
+  { question: "The graph of y = (x-1)^2(x+3) will:", choices: ["Cross at both x-intercepts", "Touch the x-axis at x=1, cross at x=-3", "Touch at both intercepts", "None of the above"], answer: "Touch the x-axis at x=1, cross at x=-3" },
+  { question: "If a polynomial has degree 7, the maximum number of real zeros is:", choices: ["5", "6", "7", "8"], answer: "7" },
+  { question: "The minimum number of turning points for a degree 5 polynomial is:", choices: ["0", "1", "2", "4"], answer: "0" },
+  { question: "The end behaviour of y = -2x^4 is:", choices: ["Up both ends", "Down both ends", "Left up, right down", "Left down, right up"], answer: "Down both ends" },
+  { question: "If (x-3) is a factor of f(x), then:", choices: ["f(3) = 0", "f(-3) = 0", "f(0) = 3", "None"], answer: "f(3) = 0" },
+  { question: "The polynomial x^5 - x factors as:", choices: ["x(x^4-1)", "x(x-1)(x+1)(x^2+1)", "x^5-x", "Both A and B"], answer: "Both A and B" },
+  { question: "Synthetic division is used when:", choices: ["Divisor is x-a", "Divisor is quadratic", "Divisor is trinomial", "None"], answer: "Divisor is x-a" },
+  { question: "The remainder when f(x) = x^3+2x^2-5 is divided by (x-1) is:", choices: ["-2", "-3", "-4", "-5"], answer: "-2" },
+  { question: "If f(x) = (x-2)^3(x+4), the graph will:", choices: ["Cross at both intercepts", "Touch at both intercepts", "Cross at -4, flatten at 2", "None"], answer: "Cross at -4, flatten at 2" },
+  { question: "The polynomial x^3+2x^2+4 has:", choices: ["3 real roots", "2 real, 1 complex", "1 real, 2 complex", "No real roots"], answer: "1 real, 2 complex" },
+  { question: "If f(x) = (x-1)(x+2)(x-3), the y-intercept is:", choices: ["+6", "-6", "0", "None"], answer: "+6" },
+  { question: "The x-intercepts of y = x^2(x-4) are:", choices: ["0, 4", "-4, 0", "2, -2", "None"], answer: "0, 4" },
+  { question: "The maximum number of turning points of a degree 8 polynomial is:", choices: ["6", "7", "8", "9"], answer: "7" },
+  { question: "Which of these is not a polynomial function?", choices: ["y = x^3+2x", "y = x^2-1", "y = 3/x", "y = 5x^4"], answer: "y = 3/x" },
+  { question: "The axis of symmetry of y = x^2+4x+3 is:", choices: ["x=-1", "x=-2", "x=2", "x=1"], answer: "x=-2" },
+  { question: "The vertex of y = x^2-6x+5 is:", choices: ["(3,-4)", "(2,1)", "(3,5)", "(0,5)"], answer: "(3,-4)" },
+  { question: "The remainder when x^4+2x^2-1 is divided by (x+1) is:", choices: ["1", "-1", "0", "2"], answer: "0" },
+  { question: "The polynomial x^2+1 has how many real zeros?", choices: ["0", "1", "2", "3"], answer: "0" },
+  { question: "The root of multiplicity 2 causes the graph to:", choices: ["Cross x-axis", "Touch and turn", "Stay above x-axis", "None"], answer: "Touch and turn" },
+  { question: "If f(x)=x^4+... the leading coefficient determines:", choices: ["Turning points", "End behaviour", "Zeros", "None"], answer: "End behaviour" },
+  { question: "If f(x)=x(x-2)(x+3), sum of roots is:", choices: ["-1", "2", "-3", "5"], answer: "-1" },
+  { question: "Product of roots of x^2+5x+6=0 is:", choices: ["5", "6", "-6", "11"], answer: "6" },
+  { question: "If f(x)=x^2-9, the graph crosses x-axis at:", choices: ["±2", "±3", "±9", "None"], answer: "±3" },
+  { question: "Maximum number of turning points for degree 3 is:", choices: ["1", "2", "3", "0"], answer: "2" },
+  { question: "The graph of y=(x-1)^4 is:", choices: ["Symmetric in y-axis", "Symmetric about x-axis", "Symmetric about x=1", "None"], answer: "Symmetric about x=1" },
+  { question: "If polynomial has odd multiplicity at root, graph will:", choices: ["Cross axis", "Touch axis", "Not touch axis", "None"], answer: "Cross axis" },
+  { question: "If polynomial has even multiplicity root, graph will:", choices: ["Cross axis", "Touch axis", "None", "Oscillate"], answer: "Touch axis" },
+  { question: "The long division of x^3+2x^2+3 by (x+1) gives remainder:", choices: ["-3", "2", "0", "1"], answer: "-3" },
+  { question: "If f(x)=(x-2)(x+1)^2, roots are:", choices: ["2,-1", "-2,1", "2,1", "None"], answer: "2,-1" },
+  { question: "If polynomial has degree 0, graph is:", choices: ["Horizontal line", "Vertical line", "Parabola", "None"], answer: "Horizontal line" },
+  { question: "A quartic polynomial has degree:", choices: ["2", "3", "4", "5"], answer: "4" },
+  { question: "Cubic polynomial has maximum roots:", choices: ["2", "3", "4", "5"], answer: "3" },
+  { question: "If f(x)=x^2-4x+4, discriminant is:", choices: ["0", "4", "-4", "16"], answer: "0" },
+  { question: "If discriminant > 0, polynomial has:", choices: ["Two real distinct roots", "Two equal roots", "No real roots", "One root"], answer: "Two real distinct roots" },
+  { question: "The polynomial x^4+... has maximum turning points:", choices: ["2", "3", "4", "5"], answer: "3" },
+  { question: "If f(x)=(x-2)^2(x+3), graph behaviour at x=2 is:", choices: ["Cross axis", "Touch and turn", "None", "Oscillate"], answer: "Touch and turn" },
+  { question: "Polynomial functions are continuous for:", choices: ["All real x", "All x except asymptotes", "Positive x", "None"], answer: "All real x" },
+  { question: "If leading coefficient positive and degree even, end behaviour is:", choices: ["Both ends up", "Both ends down", "Left down right up", "Left up right down"], answer: "Both ends up" },
+  // ----- Chapter 3: Rational Functions (51–100) -----
+  { question: "The domain of f(x) = 1/(x-3) is:", choices: ["All real numbers", "All real numbers except x = 0", "All real numbers except x = 3", "None"], answer: "All real numbers except x = 3" },
+  { question: "A vertical asymptote occurs in a rational function when:", choices: ["The numerator equals zero", "The denominator equals zero", "The degree of numerator < degree of denominator", "The leading coefficients differ"], answer: "The denominator equals zero" },
+  { question: "The horizontal asymptote of f(x) = (3x^2 + 1)/(2x^2 - 5) is:", choices: ["y = 0", "y = 3/2", "y = 2/3", "None"], answer: "y = 3/2" },
+  { question: "The rational function f(x) = (2x^3+1)/(x^2-1) has:", choices: ["A slant asymptote", "A horizontal asymptote", "No asymptote", "Vertical asymptote only"], answer: "A slant asymptote" },
+  { question: "Which describes a hole in the graph of a rational function?", choices: ["A discontinuity where numerator = denominator = 0", "Vertical asymptote", "Horizontal asymptote", "Turning point"], answer: "A discontinuity where numerator = denominator = 0" },
+  { question: "The oblique (slant) asymptote exists if:", choices: ["deg(numerator) < deg(denominator)", "deg(numerator) = deg(denominator)", "deg(numerator) = deg(denominator) + 1", "deg(numerator) > deg(denominator) + 1"], answer: "deg(numerator) = deg(denominator) + 1" },
+  { question: "The vertical asymptotes of f(x) = x^2/(x^2-9) are:", choices: ["x = 0", "x = 3, -3", "x = 9, -9", "None"], answer: "x = 3, -3" },
+  { question: "The x-intercepts of f(x) = ((x-1)(x+2))/((x-3)(x+4)) are:", choices: ["-1, -2", "1, -2", "3, -4", "None"], answer: "1, -2" },
+  { question: "If f(x) = (2x^2+3)/(x+1), the slant asymptote is found by:", choices: ["Factoring numerator", "Synthetic division", "Taking limit as x → 0", "None"], answer: "Synthetic division" },
+  { question: "The domain of f(x) = (x^2-4)/(x^2-5x+6) is:", choices: ["All real numbers except 2, 3", "All real numbers except -2, -3", "All real numbers", "None"], answer: "All real numbers except 2, 3" },
+  { question: "The horizontal asymptote of f(x) = (5x^3+1)/(2x^3-7) is:", choices: ["y = 5/2", "y = 2/5", "y = 0", "None"], answer: "y = 5/2" },
+  { question: "For f(x) = (x^2-1)/(x^2+1), the range is:", choices: ["y > -1", "y < 1", "-1 < y < 1", "y ≥ 1"], answer: "-1 < y < 1" },
+  { question: "The rational inequality (x+1)/(x-2) > 0 is true for:", choices: ["x < -1, x > 2", "x > -1, x < 2", "x > -1 or x > 2", "None"], answer: "x < -1, x > 2" },
+  { question: "If f(x) = (x^2-9)/(x-3), the simplified form is:", choices: ["x+3", "x-3", "x^2-3", "None"], answer: "x+3" },
+  { question: "The function f(x) = (x^2-4)/(x^2+4) has:", choices: ["Horizontal asymptote y = 1", "Horizontal asymptote y = 0", "Vertical asymptote x = 2", "None"], answer: "Horizontal asymptote y = 1" },
+  { question: "The number of asymptotes for f(x) = (x+1)/(x^2-1) is:", choices: ["1", "2", "3", "4"], answer: "3" },
+  { question: "The range of f(x) = 1/x is:", choices: ["All real numbers", "All real except 0", "All positive numbers", "All negative numbers"], answer: "All real except 0" },
+  { question: "If numerator degree < denominator degree, then horizontal asymptote is:", choices: ["y = 0", "x = 0", "y = 1", "None"], answer: "y = 0" },
+  { question: "The rational function (x^3)/(x^2) has:", choices: ["Vertical asymptote", "Oblique asymptote", "Horizontal asymptote", "None"], answer: "Oblique asymptote" },
+  { question: "The vertical asymptote of f(x) = (x+2)/(x^2-4) is:", choices: ["x = 2", "x = -2", "x = ±2", "None"], answer: "x = ±2" },
+  { question: "The slant asymptote of f(x) = (x^2+1)/(x-1) is:", choices: ["y = x+1", "y = x+2", "y = x-1", "None"], answer: "y = x+1" },
+  { question: "The rational inequality (x-3)/(x+1) < 0 is true for:", choices: ["x < -1", "-1 < x < 3", "x > 3", "All x"], answer: "-1 < x < 3" },
+  { question: "The horizontal asymptote of f(x) = (2x^4+1)/(3x^4-7) is:", choices: ["y = 2/3", "y = 3/2", "y = 0", "None"], answer: "y = 2/3" },
+  { question: "The range of f(x) = (x^2)/(x^2+1) is:", choices: ["y < 1", "y > 1", "y ≤ 1", "All real numbers"], answer: "y < 1" },
+  { question: "If f(x) = (x^2-1)/(x-1), the simplified form is:", choices: ["x+1", "x-1", "x^2-1", "None"], answer: "x+1" },
+  { question: "The rational function (x^2-9)/(x^2+9) has:", choices: ["Range < 1", "Range > 1", "All real range", "None"], answer: "Range < 1" },
+  { question: "If numerator and denominator have equal degree, asymptote is:", choices: ["y = 0", "ratio of leading coefficients", "None", "Infinity"], answer: "ratio of leading coefficients" },
+  { question: "The vertical asymptotes of f(x) = 1/(x^2-1) are:", choices: ["x = ±1", "x = 0", "x = ±2", "None"], answer: "x = ±1" },
+  { question: "The rational inequality (x+2)/(x-4) > 0 is true for:", choices: ["x < -2 or x > 4", "-2 < x < 4", "x > -2", "None"], answer: "x < -2 or x > 4" },
+  { question: "The oblique asymptote of f(x) = (x^3+2)/(x^2+1) is:", choices: ["y = x", "y = x+2", "y = x-2", "None"], answer: "y = x" },
+  { question: "The function f(x) = 1/(x^2) has range:", choices: ["y > 0", "y < 0", "All reals", "None"], answer: "y > 0" },
+  { question: "The vertical asymptote of f(x) = tan(x) is:", choices: ["x = nπ", "x = (2n+1)π/2", "x = nπ/2", "None"], answer: "x = (2n+1)π/2" },
+  { question: "The rational inequality (x-1)/(x+2) > 0 is true for:", choices: ["x < -2, x > 1", "-2 < x < 1", "x > -2", "None"], answer: "x < -2, x > 1" },
+  { question: "The horizontal asymptote of f(x) = (4x^5+1)/(2x^5-3) is:", choices: ["y = 2", "y = 1/2", "y = 0", "None"], answer: "y = 2" },
+  { question: "The range of f(x) = 1/(x-1) is:", choices: ["All real numbers", "All real except 1", "All real except 0", "None"], answer: "All real except 0" },
+  { question: "The rational function (x+1)^2/(x^2+1) has range:", choices: ["y ≥ 0", "y ≤ 0", "All real numbers", "None"], answer: "y ≥ 0" },
+  { question: "The rational inequality (x+1)/(x-1) < 0 is true for:", choices: ["x < -1, x > 1", "-1 < x < 1", "x > -1", "None"], answer: "-1 < x < 1" },
+  { question: "The oblique asymptote of f(x) = (x^3-1)/(x^2-1) is:", choices: ["y = x", "y = x+1", "y = x-1", "None"], answer: "y = x" },
+  { question: "The function f(x) = (x-2)/(x^2+1) has range:", choices: ["All reals", "y > -1", "y < 1", "None"], answer: "All reals" },
+  { question: "The vertical asymptote of f(x) = (x+3)/(x^2-9) is:", choices: ["x = 3", "x = -3", "x = ±3", "None"], answer: "x = ±3" },
+  { question: "The rational inequality (2x-1)/(x+4) > 0 is true for:", choices: ["x > 1/2 or x < -4", "-4 < x < 1/2", "x > -4", "None"], answer: "x > 1/2 or x < -4" },
+  { question: "The horizontal asymptote of f(x) = (x^4+2)/(3x^4+1) is:", choices: ["y = 1/3", "y = 3", "y = 0", "None"], answer: "y = 1/3" },
+  { question: "The range of f(x) = (x^2-1)/(x^2+1) is:", choices: ["y < 1", "y > -1", "-1 < y < 1", "All reals"], answer: "y < 1" },
+  { question: "The rational function f(x) = (x^2+4x+4)/(x+2) has:", choices: ["A hole at x=-2", "Vertical asymptote at x=-2", "No discontinuity", "None"], answer: "A hole at x=-2" },
+  { question: "The oblique asymptote of f(x) = (x^3+2x+1)/(x^2+1) is:", choices: ["y = x", "y = x+2", "y = x-2", "None"], answer: "y = x" },
+  { question: "The vertical asymptote of f(x) = (x^2+1)/(x^2-4) is:", choices: ["x = ±2", "x = ±4", "x = 0", "None"], answer: "x = ±2" },
+  { question: "The rational inequality (x^2-4)/(x+1) > 0 is true for:", choices: ["x < -2, x > 2", "-2 < x < 2", "x > -2", "None"], answer: "x < -2, x > 2" },
+  { question: "The horizontal asymptote of f(x) = (2x^6+1)/(5x^6-3) is:", choices: ["y = 2/5", "y = 5/2", "y = 0", "None"], answer: "y = 2/5" },
+  { question: "The range of f(x) = 1/(x^2+1) is:", choices: ["y > 0", "0 < y ≤ 1", "All real numbers", "y < 1"], answer: "0 < y ≤ 1" },
+  { question: "The rational function (x^2-1)/(x-1) has:", choices: ["Hole at x=1", "Vertical asymptote at x=1", "No asymptote", "None"], answer: "Hole at x=1" },
+  { question: "The oblique asymptote of f(x) = (x^3+x)/(x^2+1) is:", choices: ["y = x", "y = x+1", "y = x-1", "None"], answer: "y = x" },
+  { question: "The vertical asymptote of f(x) = (x^2-9)/(x-3) is:", choices: ["x=3", "x=-3", "None", "x=±3"], answer: "None" },
+  { question: "The rational inequality (x^2-1)/(x+2) < 0 is true for:", choices: ["-2 < x < -1 or x > 1", "x < -2", "x > -1", "None"], answer: "-2 < x < -1 or x > 1" },
+  { question: "The horizontal asymptote of f(x) = (7x^4+2)/(2x^4-3) is:", choices: ["y = 7/2", "y = 2/7", "y = 0", "None"], answer: "y = 7/2" },
+  { question: "The range of f(x) = (x^2)/(x^2-1) is:", choices: ["y < 0 or y > 1", "0 < y < 1", "All real numbers", "None"], answer: "y < 0 or y > 1" }
+];
+/* =========================
+   DOM BUILD
+   ========================= */
+const container = document.getElementById('questionsContainer');
+questions.forEach((Q, i) => {
+  const number = i + 1;
+  const div = document.createElement('div');
+  div.className = 'q';
+  const h = document.createElement('h4');
+  h.textContent = `${number}. ${Q.q}`;
+  div.appendChild(h);
+
+  const ans = document.createElement('div');
+  ans.className = 'answers';
+  Q.opts.forEach(opt => {
+    const id = `q${i}-${sanitizeId(opt)}`;
+    const lbl = document.createElement('label');
+    lbl.setAttribute('for', id);
+    const radio = document.createElement('input');
+    radio.type='radio'; radio.name=`q${i}`; radio.value=opt; radio.id=id; radio.required=true;
+    lbl.appendChild(radio);
+    lbl.appendChild(document.createTextNode(' ' + opt));
+    ans.appendChild(lbl);
+  });
+  div.appendChild(ans);
+  container.appendChild(div);
+});
+function sanitizeId(s){ return s.replace(/[^a-z0-9]+/gi,'-'); }
+
+/* =========================
+   TIMER (90 minutes)
+   ========================= */
+let timeLeft = 90 * 60; // seconds
+const timerEl = document.getElementById('timer');
+const timerInterval = setInterval(()=>{
+  if(timeLeft <= 0){
+    clearInterval(timerInterval);
+    timerEl.textContent = 'Time left: 00:00';
+    document.getElementById('quizForm').requestSubmit();
+    return;
+  }
+  const m = Math.floor(timeLeft/60).toString().padStart(2,'0');
+  const s = (timeLeft%60).toString().padStart(2,'0');
+  timerEl.textContent = `Time left: ${m}:${s}`;
+  timeLeft--;
+}, 1000);
+
+/* =========================
+   NAV CONTROLS
+   ========================= */
+document.getElementById('toTop').onclick = ()=>window.scrollTo({top:0,behavior:'smooth'});
+document.getElementById('toBottom').onclick = ()=>window.scrollTo({top:document.body.scrollHeight,behavior:'smooth'});
+
+function firstUnansweredIndex(step=+1){
+  const total = questions.length;
+  const qs = [...document.querySelectorAll('.q')];
+  const mid = window.scrollY + window.innerHeight/2;
+  let near = 0;
+  qs.forEach((el,idx)=>{
+    const r = el.getBoundingClientRect();
+    const y = r.top + window.scrollY;
+    if (y < mid) near = idx;
+  });
+  for(let k=1;k<=total;k++){
+    const i = ((near + step*k) % total + total) % total;
+    if(!document.querySelector(`input[name="q${i}"]:checked`)) return i;
+  }
+  return -1;
+}
+document.getElementById('nextUnanswered').onclick = ()=>{
+  const idx = firstUnansweredIndex(+1);
+  if(idx>=0) document.querySelectorAll('.q')[idx].scrollIntoView({behavior:'smooth',block:'center'});
+};
+document.getElementById('prevUnanswered').onclick = ()=>{
+  const idx = firstUnansweredIndex(-1);
+  if(idx>=0) document.querySelectorAll('.q')[idx].scrollIntoView({behavior:'smooth',block:'center'});
+};
+
+/* =========================
+   SUBMIT / SCORE / FEEDBACK
+   ========================= */
+const form = document.getElementById('quizForm');
+const result = document.getElementById('result');
+const breakdown = document.getElementById('breakdown');
+const failedNumbersEl = document.getElementById('failedNumbers');
+const failedListEl = document.getElementById('failedList');
+
+form.addEventListener('submit', async (e)=>{
+  e.preventDefault();
+  clearInterval(timerInterval);
+
+  const name = document.getElementById('studentName').value.trim();
+  if(!name){ alert('Please enter student name'); return; }
+
+  const ok = confirm('Are you sure you want to submit your answers?');
+  if(!ok) return;
+
+  const formData = new FormData(form);
+  let score = 0;
+  const wrongs = [];
+  const failedNumbers = [];
+
+  document.querySelectorAll('.answers label').forEach(l => l.classList.remove('correct','wrong'));
+
+  for(let i=0;i<questions.length;i++){
+    const given = formData.get(`q${i}`);
+    const correct = questions[i].a;
+    const labels = [...document.querySelectorAll(`input[name="q${i}"]`)].map(inp=>inp.parentElement);
+
+    labels.forEach(lbl=>{
+      if(lbl.querySelector('input').value === correct){
+        addTag(lbl,'Correct');
+        lbl.classList.add('correct');
+      }
+    });
+
+    if(given === correct){
+      score++;
+    }else{
+      failedNumbers.push(i+1);
+      const wrongLabel = document.querySelector(`input[name="q${i}"]:checked`)?.parentElement;
+      if(wrongLabel){
+        addTag(wrongLabel,'Your choice');
+        wrongLabel.classList.add('wrong');
+      }
+      wrongs.push({number: i+1, question: questions[i].q, your_answer: given ?? "(no answer)", correct_answer: correct});
+    }
+  }
+
+  result.textContent = `${name}: You scored ${score} / ${questions.length}.`;
+
+  if(wrongs.length){
+    breakdown.hidden = false;
+    failedNumbersEl.textContent = `You missed these question numbers: ${failedNumbers.join(', ')}.`;
+    failedListEl.innerHTML = '';
+    wrongs.forEach(w=>{
+      const li = document.createElement('li');
+      li.innerHTML = `<strong>Q${w.number}.</strong> ${escapeHtml(w.question)}<br>
+        <em>Your answer:</em> ${escapeHtml(w.your_answer)}<br>
+        <em>Correct answer:</em> ${escapeHtml(w.correct_answer)}`;
+      failedListEl.appendChild(li);
+    });
+  }else{
+    breakdown.hidden = false;
+    failedNumbersEl.textContent = 'Perfect! You did not miss any question.';
+    failedListEl.innerHTML = '';
+  }
+
+  try {
+    await fetch('https://formspree.io/f/mvgqwywl', {
+      method:'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({
+        subject: `Basic Science Quiz — ${name} — ${score}/${questions.length}`,
+        message: `Student: ${name}\nScore: ${score}/${questions.length}\nFailed numbers: ${failedNumbers.join(', ') || 'None'}`,
+        wrongs
+      })
+    });
+    const note = document.createElement('div');
+    note.className='note';
+    note.textContent = 'Only the failed questions have been sent to the teacher email.';
+    result.appendChild(document.createElement('br'));
+    result.appendChild(note);
+  } catch(err) {
+    const warn = document.createElement('div');
+    warn.className='warn';
+    warn.textContent = 'Could not send results to email (network/CORS). Your score and feedback are shown above.';
+    result.appendChild(document.createElement('br'));
+    result.appendChild(warn);
+  }
+});
+function addTag(label, text){
+  if(label.querySelector('.tag')) return;
+  const span = document.createElement('span');
+  span.className = 'tag';
+  span.style.marginLeft = '6px';
+  span.textContent = `(${text})`;
+  label.appendChild(span);
+}
+form.addEventListener('invalid', function(ev){
+  ev.preventDefault();
+  for(let i=0;i<questions.length;i++){
+    if(!document.querySelector(`input[name="q${i}"]:checked`)){
+      const el = document.querySelector(`input[name="q${i}"]`);
+      if(el){ el.scrollIntoView({behavior:'smooth',block:'center'}); el.focus(); }
+      break;
+    }
+  }
+}, true);
+function escapeHtml(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+</script>
+</body>
+</html>
+
