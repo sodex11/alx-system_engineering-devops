@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Grade 12 Advanced Functions — 100-Question Objective Test</title>
+<title>Grade 12 Advanced Function  — 100-Question Objective Test</title>
 <style>
   :root{
     --bg:#f6f7fb;--card:#fff;--ink:#111;--muted:#555;
@@ -50,8 +50,8 @@
 </head>
 <body>
 <header>
-  <h1>Grade 12 Advanced Functions — Objective Test (100 Questions)</h1>
-  <div class="sub">Chapters 1 → 5 • 90 minutes • Continuous numbering</div>
+  <h1>Grade 12 Advanced Function — Objective Test (100 Questions)</h1>
+  <div class="sub">Sections A → D • 90 minutes • Continuous numbering</div>
 </header>
 
 <main>
@@ -60,7 +60,7 @@
       <label class="name">Student full name
         <input id="studentName" name="studentName" type="text" placeholder="Enter full name" required />
       </label>
-      <div id="timer" aria-live="polite">Time left: 90:00</div>
+      <div id="timer" aria-live="polite">Time left: 60:00</div>
     </div>
 
     <div class="nav-row" aria-label="navigation-not-submit">
@@ -93,30 +93,118 @@
 </main>
 
 <footer>
-  <div>Built for Grade 12 Advanced Functions • Auto-sends only failed questions to teacher email.</div>
+  <div>Built for Grade 12 Advanced Function • Auto-sends only failed questions to teacher email.</div>
 </footer>
 
 <script>
 /* =========================
    QUIZ DATA (100 MCQs)
    ========================= */
-
 const questions = [
-{q:"The domain of f(x)=√x is:", opts:["x>0","x≥0","x<0","All real x"], a:"x≥0"},
-{q:"The inverse of f(x)=2x+3 is:", opts:["(x−3)/2","2x−3","(x+3)/2","1/(2x+3)"], a:"(x−3)/2"},
-{q:"If f(x)=x² and g(x)=√x, then g(f(x)) is:", opts:["x","√x²","|x|","x²"], a:"|x|"},
-...   /* (all questions from 1–93 we wrote earlier) */
-{q:"The rational function (x²+2x+1)/(x+1) has:", opts:["Hole at x=−1","Asymptote at x=−1","No intercepts","None"], a:"Hole at x=−1"},
-{q:"The graph of f(x)=(x²−9)/(x−3) simplifies to:", opts:["x+3 with hole at x=3","x−3 with hole at x=−3","x+3 with vertical asymptote","x−3 with asymptote"], a:"x+3 with hole at x=3"},
-{q:"The oblique asymptote of f(x)=(x³+1)/(x²+1) is:", opts:["y=x","y=x+1","y=x−1","y=0"], a:"y=x"},
-{q:"For f(x)=(x²−1)/(x²+1), the horizontal asymptote is:", opts:["y=1","y=0","y=−1","None"], a:"y=1"},
-{q:"The rational function (x²+4)/(x²−4) has vertical asymptotes at:", opts:["x=±2","x=±4","x=0","None"], a:"x=±2"},
-{q:"The rational function (5x²−3)/(2x²+7) has horizontal asymptote:", opts:["y=5/2","y=2/5","y=7/5","y=0"], a:"y=5/2"},
-{q:"The rational function (x²−4x+3)/(x−3) has:", opts:["Hole at x=3","Vertical asymptote at x=3","Oblique asymptote","Horizontal asymptote"], a:"Hole at x=3"},
-{q:"For f(x)=1/(x²), as x→∞, f(x) approaches:", opts:["0","∞","1","−∞"], a:"0"},
-{q:"For f(x)=1/(x²), as x→0, f(x) approaches:", opts:["∞","0","−∞","1"], a:"∞"},
-{q:"The graph of f(x)=(x²−1)/(x²−4) has vertical asymptotes at:", opts:["x=±2","x=±1","x=0","None"], a:"x=±2"}
+// ----- Polynomial Functions (1–50) -----
+{q:"Which of the following is a polynomial function?", opts:["f(x) = x^3 - 4x + 7","f(x) = 2/x + 1","f(x) = √x + 2","f(x) = log(x)"], a:"f(x) = x^3 - 4x + 7"},
+{q:"The degree of the polynomial f(x) = 7x^4 - 3x^2 + 5 is:", opts:["2","3","4","5"], a:"4"},
+{q:"The leading coefficient of f(x) = -2x^5 + x^3 - 7 is:", opts:["-2","-7","5","1"], a:"-2"},
+{q:"The y-intercept of f(x) = 3x^2 - 5x + 4 is:", opts:["3","-5","4","-4"], a:"4"},
+{q:"If f(x) = (x - 2)(x + 3), what are the zeros of f(x)?", opts:["2 and -3","-2 and 3","3 and 2","-3 and -2"], a:"2 and -3"},
+{q:"The multiplicity of zero x = 2 in f(x) = (x - 2)^3(x + 1) is:", opts:["1","2","3","4"], a:"3"},
+{q:"A polynomial of degree 5 can have at most how many turning points?", opts:["3","4","5","6"], a:"4"},
+{q:"Which end behaviour describes f(x) = -x^4 + 2x^2?", opts:["Rises left, rises right","Falls left, rises right","Falls left, falls right","Rises left, falls right"], a:"Falls left, falls right"},
+{q:"The polynomial function f(x) = x^2(x - 3)(x + 2) has degree:", opts:["2","3","4","5"], a:"4"},
+{q:"Which factor theorem statement is true?", opts:["If f(a)=0 then (x - a) is a factor of f(x)","If (x - a) divides f(x) then f(a)=1","If f(a)=1 then (x - a) is a factor","If f(0)=0 then (x+1) is a factor"], a:"If f(a)=0 then (x - a) is a factor of f(x)"},
+{q:"The remainder when f(x)=2x^3-3x+5 is divided by (x-2) is:", opts:["1","3","5","7"], a:"7"},
+{q:"The Rational Root Theorem gives possible roots of f(x)=2x^3-5x^2+x-3 as:", opts:["±1, ±3","±1/2, ±3/2, ±1, ±3","±1/3, ±3/2","±2, ±3"], a:"±1/2, ±3/2, ±1, ±3"},
+{q:"If f(x)=(x-1)(x+1)(x-2), the y-intercept is:", opts:["1","-2","2","-2"], a:"2"},
+{q:"If f(x)=x^4 - 16, which of the following is a factor?", opts:["x+4","x+2","x-3","x-5"], a:"x+4"},
+{q:"The polynomial identity (x^2 - 4) = (x - 2)(x + 2) is an example of:", opts:["Difference of cubes","Difference of squares","Perfect square trinomial","Quadratic formula"], a:"Difference of squares"},
+{q:"If f(x) = x^3 - 3x^2 - x + 3, which is a zero?", opts:["1","-1","3","-3"], a:"1"},
+{q:"End behaviour of odd degree polynomial with positive leading coefficient:", opts:["Falls left, rises right","Rises left, falls right","Rises both ends","Falls both ends"], a:"Falls left, rises right"},
+{q:"The graph of f(x) = (x - 2)^2 touches the x-axis at:", opts:["x = 2","x = -2","x = 0","x = 1"], a:"x = 2"},
+{q:"If f(x)=2(x+1)^2(x-3), the zero x = -1 has multiplicity:", opts:["1","2","3","4"], a:"2"},
+{q:"Which is NOT a polynomial?", opts:["3x^2 + 2x - 7","x^(-1) + 2","5x^3 - 4x","7"], a:"x^(-1) + 2"},
+{q:"If f(x)=x^3+4x^2+5x+20, then -4 is:", opts:["Not a zero","A zero","A factor twice","A turning point"], a:"A zero"},
+{q:"Which polynomial has exactly 3 real zeros?", opts:["x^2 + 4","x^3 - x","x^4 - 4","x^2 - 1"], a:"x^3 - x"},
+{q:"Which factorization is correct?", opts:["x^3 + 8 = (x+2)(x^2 - 2x + 4)","x^3 - 8 = (x-2)(x^2 + 2x + 4)","x^2 - 9 = (x-3)(x+3)","All of the above"], a:"All of the above"},
+{q:"The polynomial f(x)=x^5 has how many turning points?", opts:["5","4","3","2"], a:"4"},
+{q:"If the degree is even and leading coefficient is positive, the end behaviour is:", opts:["Up both ends","Down both ends","Up left, down right","Down left, up right"], a:"Up both ends"},
+{q:"The zeros of f(x)=x^2+5x+6 are:", opts:["-3 and -2","3 and 2","-6 and 1","None"], a:"-3 and -2"},
+{q:"If f(x)=x^2+1, its graph:", opts:["Crosses x-axis","Never touches x-axis","Has zeros at ±1","Has 2 turning points"], a:"Never touches x-axis"},
+{q:"The multiplicity of zero x=0 in f(x)=x^4(x+2) is:", opts:["1","2","3","4"], a:"4"},
+{q:"The degree of f(x)=7 is:", opts:["0","1","7","None"], a:"0"},
+{q:"Which statement about polynomials is false?", opts:["They have integer exponents","They are continuous everywhere","They can have fractional powers","They can be factored"], a:"They can have fractional powers"},
+{q:"If f(x) has degree 6, maximum number of real zeros is:", opts:["3","4","6","5"], a:"6"},
+{q:"Descartes’ Rule of Signs gives information about:", opts:["Exact zeros","Number of positive/negative real zeros","Turning points","Domain"], a:"Number of positive/negative real zeros"},
+{q:"If f(x)=x^3+2x^2-5x-6, then synthetic division by (x+2) gives remainder:", opts:["0","-1","1","2"], a:"0"},
+{q:"A polynomial function is symmetric about the origin if:", opts:["It is odd","It is even","It has degree 2","It has real zeros"], a:"It is odd"},
+{q:"If f(x)=x^2(x-3), f(0) equals:", opts:["0","3","-3","9"], a:"0"},
+{q:"The axis of symmetry of y = x^2 + 4x + 1 is:", opts:["x = 2","x = -2","x = 4","x = -4"], a:"x = -2"},
+{q:"The discriminant of x^2 - 4x + 3 is:", opts:["0","1","4","16"], a:"4"},
+{q:"If discriminant < 0, then:", opts:["Two real roots","One real root","Two complex roots","No roots"], a:"Two complex roots"},
+{q:"The factor theorem is based on:", opts:["Remainder theorem","Division algorithm","Quadratic formula","Binomial theorem"], a:"Remainder theorem"},
+{q:"The zero of f(x)=x^2-1 is:", opts:["1 only","-1 only","±1","0"], a:"±1"},
+{q:"The turning point of y=x^2 is at:", opts:["(0,0)","(1,0)","(0,1)","(2,1)"], a:"(0,0)"},
+{q:"The axis of symmetry of y=x^2 is:", opts:["x=0","y=0","x=1","y=1"], a:"x=0"},
+{q:"The domain of a polynomial function is:", opts:["All real numbers","Positive numbers only","Negative numbers only","Depends on degree"], a:"All real numbers"},
+{q:"The range of f(x)=x^2 is:", opts:["(-∞, ∞)","[0, ∞)","(-∞,0]","None"], a:"[0, ∞)"},
+{q:"A polynomial of odd degree must have:", opts:["No real zero","At least one real zero","Complex zeros only","Zero constant"], a:"At least one real zero"},
+{q:"The sum of zeros of f(x)=x^2+5x+6 is:", opts:["-5","5","-6","6"], a:"-5"},
+{q:"The product of zeros of f(x)=x^2+5x+6 is:", opts:["-6","6","5","-5"], a:"6"},
+{q:"Which describes the graph of odd degree polynomial with negative leading coefficient?", opts:["Rises left, falls right","Falls left, rises right","Rises both ends","Falls both ends"], a:"Rises left, falls right"},
+{q:"The axis of symmetry of y=x^2-6x+5 is:", opts:["x=3","x=-3","x=5","x=-5"], a:"x=3"},
+
+// ----- Rational Functions (51–100) -----
+{q:"The domain of f(x) = 1/(x-2) is:", opts:["x ≠ 0","x ≠ 2","x > 0","x < 2"], a:"x ≠ 2"},
+{q:"The vertical asymptote of f(x) = 1/(x+3) is:", opts:["x=0","x=-3","y=0","x=3"], a:"x=-3"},
+{q:"The horizontal asymptote of f(x) = 1/x is:", opts:["x=0","y=0","y=1","x=1"], a:"y=0"},
+{q:"If numerator degree < denominator degree, horizontal asymptote is:", opts:["y=0","x=0","none","y=1"], a:"y=0"},
+{q:"If numerator and denominator have same degree, asymptote is:", opts:["y=ratio of leading coefficients","x=0","y=0","none"], a:"y=ratio of leading coefficients"},
+{q:"If numerator degree > denominator degree by 1, the asymptote is:", opts:["vertical","horizontal","oblique/slant","none"], a:"oblique/slant"},
+{q:"The domain of f(x)= (x+1)/(x^2-4) is:", opts:["x≠2, -2","x≠1","x≠0","All real numbers"], a:"x≠2, -2"},
+{q:"The vertical asymptotes of f(x)= (x-3)/(x^2-9) are:", opts:["x=3,-3","x=0","x=±9","x=1"], a:"x=3,-3"},
+{q:"If f(x)=(x^2-1)/(x-1), simplified form is:", opts:["x+1","x-1","x+2","x"], a:"x+1"},
+{q:"The hole in f(x)=(x^2-1)/(x-1) occurs at:", opts:["x=0","x=1","x=-1","x=2"], a:"x=1"},
+{q:"A rational function cannot have:", opts:["Vertical asymptote","Horizontal asymptote","Oblique asymptote","Circle asymptote"], a:"Circle asymptote"},
+{q:"The graph of y=1/x has:", opts:["One branch","Two branches","Three branches","Four branches"], a:"Two branches"},
+{q:"The symmetry of f(x)=1/x is:", opts:["Even","Odd","None","Both"], a:"Odd"},
+{q:"The vertical asymptote of f(x)=(2x)/(x-5) is:", opts:["x=0","x=5","x=-5","y=2"], a:"x=5"},
+{q:"The horizontal asymptote of f(x)=(2x)/(x-5) is:", opts:["y=0","y=2","y=1","x=2"], a:"y=2"},
+{q:"If f(x)=(x^2+3x+2)/(x+1), vertical asymptote is:", opts:["x=-1","x=0","x=2","none"], a:"x=-1"},
+{q:"The oblique asymptote of f(x)=(x^2+1)/(x-1) is:", opts:["y=x","y=x+1","y=x-1","y=0"], a:"y=x+1"},
+{q:"The rational function f(x)=(x+2)/(x^2+1) has domain:", opts:["x≠-2","All real numbers","x≠±1","x>0"], a:"All real numbers"},
+{q:"The range of f(x)=(x+2)/(x^2+1) includes:", opts:["All real numbers","Excludes y=0","Excludes y>1","Excludes y<-1"], a:"All real numbers"},
+{q:"The intercept of f(x)=1/(x+1) at y-axis is:", opts:["1","0","-1","Undefined"], a:"1"},
+{q:"If f(x)=(x^2-4)/(x-2), simplified f(x) is:", opts:["x-2","x+2","x^2-2","x-1"], a:"x+2"},
+{q:"Hole in f(x)=(x^2-4)/(x-2) occurs at:", opts:["x=2","x=-2","x=0","None"], a:"x=2"},
+{q:"The graph of f(x)=(x+1)/(x-1) has symmetry about:", opts:["Origin","x-axis","y-axis","Line y=x"], a:"Origin"},
+{q:"Rational functions are undefined when:", opts:["Numerator=0","Denominator=0","Numerator<0","Denominator>0"], a:"Denominator=0"},
+{q:"If degree numerator < degree denominator, graph approaches:", opts:["x-axis","y-axis","infinity","zero"], a:"x-axis"},
+{q:"If degree numerator > degree denominator by 2, then:", opts:["Oblique asymptote","Quadratic asymptote","No asymptote","Circle"], a:"Quadratic asymptote"},
+{q:"Which rational function has no vertical asymptote?", opts:["1/x","1/(x+1)","(x^2+1)/(x+2)","(x-1)/(x-1)"], a:"(x-1)/(x-1)"},
+{q:"The graph of y=1/x^2 lies:", opts:["Above x-axis","Below x-axis","Both sides","On x-axis"], a:"Above x-axis"},
+{q:"The vertical asymptote of f(x)=1/x^2 is:", opts:["x=0","y=0","y=1","x=1"], a:"x=0"},
+{q:"The horizontal asymptote of f(x)=1/x^2 is:", opts:["y=0","y=1","x=0","x=1"], a:"y=0"},
+{q:"The graph of y=1/x^2 is symmetric about:", opts:["x-axis","y-axis","origin","line y=x"], a:"y-axis"},
+{q:"If f(x)=(2x+1)/(x^2+1), vertical asymptotes are:", opts:["x=±1","x=0","None","x=2"], a:"None"},
+{q:"Which rational function has a slant asymptote?", opts:["(x^2+1)/(x-1)","1/(x^2+1)","1/(x+1)","(x+1)/(x^2+1)"], a:"(x^2+1)/(x-1)"},
+{q:"If f(x)=1/(x-4), domain excludes:", opts:["x=0","x=4","x=-4","x=2"], a:"x=4"},
+{q:"If f(x)=(x-2)/(x^2-1), vertical asymptotes are:", opts:["x=±1","x=0","x=2","none"], a:"x=±1"},
+{q:"The rational function f(x)=(x^2-9)/(x-3) simplifies to:", opts:["x+3","x-3","x+2","x-2"], a:"x+3"},
+{q:"The hole in f(x)=(x^2-9)/(x-3) is at:", opts:["x=0","x=3","x=-3","None"], a:"x=3"},
+{q:"The function f(x)=(x^2+1)/(x^2+2) has horizontal asymptote:", opts:["y=0","y=1","y=2","none"], a:"y=1"},
+{q:"The vertical asymptote of f(x)=(x^2+1)/(x^2-4) is:", opts:["x=±2","x=0","y=0","x=±1"], a:"x=±2"},
+{q:"The rational function f(x)=(2x^3)/(x^2+1) has:", opts:["Oblique asymptote","Quadratic asymptote","Vertical asymptote","No asymptote"], a:"Oblique asymptote"},
+{q:"The rational function (x^2+2x+1)/(x+1) has:", opts:["Hole at x=-1","Asymptote at x=-1","No intercept","None"], a:"Hole at x=-1"},
+{q:"The oblique asymptote of f(x)=(x^3+1)/(x^2+1) is:", opts:["y=x","y=x+1","y=x-1","y=0"], a:"y=x"},
+{q:"For f(x)=(x^2-1)/(x^2+1), horizontal asymptote is:", opts:["y=1","y=0","y=-1","none"], a:"y=1"},
+{q:"The rational function (x^2+4)/(x^2-4) has vertical asymptotes at:", opts:["x=±2","x=±4","x=0","none"], a:"x=±2"},
+{q:"The rational function (5x^2-3)/(2x^2+7) has horizontal asymptote:", opts:["y=5/2","y=2/5","y=7/5","y=0"], a:"y=5/2"},
+{q:"The rational function (x^2-4x+3)/(x-3) has:", opts:["Hole at x=3","Vertical asymptote at x=3","Oblique asymptote","Horizontal asymptote"], a:"Hole at x=3"},
+{q:"For f(x)=1/(x^2), as x→∞, f(x) approaches:", opts:["0","∞","1","-∞"], a:"0"},
+{q:"For f(x)=1/(x^2), as x→0, f(x) approaches:", opts:["∞","0","-∞","1"], a:"∞"},
+{q:"The graph of f(x)=(x^2-1)/(x^2-4) has vertical asymptotes at:", opts:["x=±2","x=±1","x=0","None"], a:"x=±2"}
 ];
+
+  
 
 /* =========================
    DOM BUILD
@@ -150,7 +238,7 @@ function sanitizeId(s){ return s.replace(/[^a-z0-9]+/gi,'-'); }
 /* =========================
    TIMER (90 minutes)
    ========================= */
-let timeLeft = 90 * 60;
+let timeLeft = 60 * 60; // seconds
 const timerEl = document.getElementById('timer');
 const timerInterval = setInterval(()=>{
   if(timeLeft <= 0){
@@ -271,7 +359,7 @@ form.addEventListener('submit', async (e)=>{
       method:'POST',
       headers: {'Content-Type':'application/json'},
       body: JSON.stringify({
-        subject: `Advanced Functions Quiz — ${name} — ${score}/${questions.length}`,
+        subject: `Basic Science Quiz — ${name} — ${score}/${questions.length}`,
         message: `Student: ${name}\nScore: ${score}/${questions.length}\nFailed numbers: ${failedNumbers.join(', ') || 'None'}`,
         wrongs
       })
@@ -284,7 +372,7 @@ form.addEventListener('submit', async (e)=>{
   } catch(err) {
     const warn = document.createElement('div');
     warn.className='warn';
-    warn.textContent = 'Could not send results to email. Your score and feedback are shown above.';
+    warn.textContent = 'Could not send results to email (network/CORS). Your score and feedback are shown above.';
     result.appendChild(document.createElement('br'));
     result.appendChild(warn);
   }
