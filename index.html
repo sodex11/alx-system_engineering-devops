@@ -51,7 +51,7 @@
 <body>
 <header>
   <h1>JS3 Basic Science — Objective Test (100 Questions)</h1>
-  <div class="sub">Sections A → D • 90 minutes • Continuous numbering</div>
+  <div class="sub">Sections A → D • 60 minutes • Continuous numbering</div>
 </header>
 
 <main>
@@ -60,7 +60,7 @@
       <label class="name">Student full name
         <input id="studentName" name="studentName" type="text" placeholder="Enter full name" required />
       </label>
-      <div id="timer" aria-live="polite">Time left: 90:00</div>
+      <div id="timer" aria-live="polite">Time left: 60:00</div>
     </div>
 
     <div class="nav-row" aria-label="navigation-not-submit">
@@ -370,7 +370,7 @@ function sanitizeId(s){ return s.replace(/[^a-z0-9]+/gi,'-'); }
 /* =========================
    TIMER (90 minutes)
    ========================= */
-let timeLeft = 90 * 60; // seconds
+let timeLeft = 60 * 60; // seconds
 const timerEl = document.getElementById('timer');
 const timerInterval = setInterval(()=>{
   if(timeLeft <= 0){
